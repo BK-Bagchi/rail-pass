@@ -1,5 +1,8 @@
 import express from "express";
 import dbConnection from "./config/database.js";
+import authRouter from "./routes/auth.route.js";
+import bookingRouter from "./routes/booking.route.js";
+import trainRouter from "./routes/train.route.js";
 const app = express();
 const port = 4000;
 app.listen(port, () => {
@@ -16,6 +19,9 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.send("App is alive");
 });
+app.use("/auth", authRouter);
+app.use("/booking", bookingRouter);
+app.use("/train", trainRouter);
 
 //Database Connection
 // dbConnection();
