@@ -1,15 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
   <div class="container">
     <a class="navbar-brand fw-bold" href="#">🚆 Rail Pass</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -23,15 +15,7 @@
           <a class="nav-link" href="#">Trains</a>
         </li>
         <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Services
-          </a>
+          <a class="nav-link dropdown-toggle"href="#"role="button"ata-bs-toggle="dropdown"aria-expanded="false"> Services </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">Ticket Booking</a></li>
             <li><a class="dropdown-item" href="#">Seat Availability</a></li>
@@ -43,20 +27,17 @@
 
       <!-- Search form -->
       <form class="d-flex me-3" role="search">
-        <input
-          class="form-control me-2"
-          type="search"
-          placeholder="Search Trains"
-          aria-label="Search"
-        />
+        <input class="form-control me-2" type="search" placeholder="Search Trains" aria-label="Search" />
         <button class="btn btn-light" type="submit">Search</button>
       </form>
 
       <!-- Login/Register buttons -->
-      <div class="d-flex gap-2">
-        <a href="/login" class="btn btn-outline-light">Login</a>
-        <a href="/register" class="btn btn-warning text-dark fw-bold">Register</a>
-      </div>
+        <% if (!session.user){%>
+        <div class="d-flex gap-2">
+            <a href="/auth/login" class="btn btn-outline-light">Login</a>
+            <a href="/auth/register" class="btn btn-warning text-dark fw-bold">Register</a>
+        </div>
+      <% } %>
     </div>
   </div>
 </nav>

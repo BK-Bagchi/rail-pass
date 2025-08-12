@@ -29,6 +29,12 @@ app.use(
   })
 );
 
+// Makes session available in EJS
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+});
+
 //Declare Route
 app.get("/", (req, res) => {
   res.render("index");
