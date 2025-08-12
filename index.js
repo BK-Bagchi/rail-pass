@@ -17,7 +17,7 @@ app.use(express.static("public"));
 
 //Declare Route
 app.get("/", (req, res) => {
-  res.send("App is alive");
+  res.render("index");
 });
 app.use("/auth", authRouter);
 app.use("/booking", bookingRouter);
