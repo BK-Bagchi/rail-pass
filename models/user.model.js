@@ -5,8 +5,10 @@ const userSchema = new mongoose.Schema(
     firstName: { type: String },
     lastName: { type: String },
     email: { type: String, unique: true },
+    password: { type: String, required: true },
     phone: { type: String, unique: true },
     dateOfBirth: { type: Date },
+    photoURL: { type: String },
     address: {
       location: { type: String },
       district: { type: String },

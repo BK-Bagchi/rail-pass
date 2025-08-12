@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 import User from "../models/user.model.js";
 
 export const registerUser = async (req, res) => {
@@ -9,7 +10,11 @@ export const registerUser = async (req, res) => {
         .status(400)
         .render("login", { message: "User already exists. Login to continue" });
 
-    const newUser = await User.create(req.body);
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const newUser = await User.create({
+      ...req.body,
+      password: hashedPassword,
+    });
     if (newUser)
       return res.status(201).render("login", {
         message: "User registered successfully. Please login to continue",
@@ -25,10 +30,26 @@ export const loginUser = async (req, res) => {
     if (!user)
       return res.status(404).render("login", { message: "User not found" });
 
-    // // Store user in session so we can access it later
-    // req.session.user = user;
+    const isPasswordValid = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!isPasswordValid)
+      return res.status(400).render("login", { message: "Invalid password" });
 
+    req.session.user = user;
     res.redirect("/");
+  } catch (error) {
+    res.status(500).json({ message: error || "Internal Server Error" });
+  }
+};
+
+export const logoutUser = (req, res) => {
+  try {
+    req.session.destroy((error) => {
+      if (error) return res.status(500).json({ message: "Logout failed" });
+      res.redirect("/");
+    });
   } catch (error) {
     res.status(500).json({ message: error || "Internal Server Error" });
   }
