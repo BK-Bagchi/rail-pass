@@ -1,0 +1,37 @@
+<form action="/booking" method="POST" class="p-4 shadow rounded bg-light" style="max-width: 500px; margin: auto;">
+  <h3 class="mb-4 text-center">Book Your Ticket</h3>
+
+  <div class="mb-3">
+    <label for="fromStation" class="form-label fw-bold">From Station</label>
+    <input type="text" class="form-control" id="fromStation" name="fromStation" placeholder="Enter departure station" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="toStation" class="form-label fw-bold">To Station</label>
+    <input type="text" class="form-control" id="toStation" name="toStation" placeholder="Enter destination station" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="seatClass" class="form-label fw-bold">Seat Class</label>
+    <select class="form-select" id="seatClass" name="seatClass" required>
+      <option value="" class="d-none">Select seat class</option>
+      <option value="AC_Sleeper">AC_Sleeper</option>
+      <option value="AC_Chair">AC_Chair</option>
+      <option value="AC_Seat">AC_Seat</option>
+      <option value="First_Sleeper">First_Sleeper</option>
+      <option value="First_Chair">First_Chair</option>
+      <option value="First_Seat">First_Seat</option>
+      <option value="General">General</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="journeyDate" class="form-label fw-bold">Journey Date</label>
+    <input type="date" class="form-control" id="journeyDate" name="journeyDate" required>
+  </div>
+
+  <div class="d-grid">
+    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+  </div>
+</form>
+

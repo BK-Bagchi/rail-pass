@@ -7,7 +7,15 @@ const bookingSchema = new mongoose.Schema(
     pnr: { type: String },
     seatClass: {
       type: { type: String },
-      enum: ["AC", "Sleeper", "General"],
+      enum: [
+        "AC_Sleeper",
+        "AC_Chair",
+        "AC_Seat", //AC Cabin
+        "First_Sleeper",
+        "First_Chair",
+        "First_Seat", //First Cabin
+        "General",
+      ],
       default: "General",
     },
     seatNumber: [{ type: String }],
