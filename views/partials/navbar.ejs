@@ -37,7 +37,11 @@
             <a href="/auth/login" class="btn btn-outline-light">Login</a>
             <a href="/auth/register" class="btn btn-warning text-dark fw-bold">Register</a>
         </div>
-      <% } %>
+      <% }else{%>
+      <div class="d-flex gap-2">
+          <a href="/auth/profile" class="btn btn-outline-light">Profile</a>
+          <a href="/auth/logout" class="btn btn-danger">Logout</a>
+      <%} %>
     </div>
   </div>
 </nav>
