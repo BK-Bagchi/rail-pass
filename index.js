@@ -1,4 +1,5 @@
 import express from "express";
+import dbConnection from "./config/database.js";
 const app = express();
 const port = 4000;
 app.listen(port, () => {
@@ -15,3 +16,6 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.send("App is alive");
 });
+
+//Database Connection
+dbConnection();
