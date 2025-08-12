@@ -18,4 +18,4 @@ app.get("/", (req, res) => {
 });
 
 //Database Connection
-dbConnection();
+// dbConnection();
