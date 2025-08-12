@@ -12,14 +12,47 @@
     <%- include('../partials/navbar') %>
     <div class="container mt-5" style="height: auto;">
         <h2 class="text-center mb-4">Create Your Rail Pass Account</h2>
-    <form action="/auth/login" method="get" class="p-4 shadow rounded bg-light" style="max-width: 500px; margin: auto;">
-            <div class="mb-3">
-                <label for="name" class="form-label fw-bold">Full Name</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name" required>
+        <form action="/auth/register" method="POST" class="p-4 shadow rounded bg-light" style="max-width: 800px; margin: auto;">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="firstName" class="form-label fw-bold">First Name</label>
+                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="lastName" class="form-label fw-bold">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name" required>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label fw-bold">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label fw-bold">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter phone number" required>
+            </div>
+            <div class="mb-3">
+                <label for="dob" class="form-label fw-bold">Date of Birth</label>
+                <input type="date" class="form-control" id="dob" name="dateOfBirth" required>
+            </div>
+            <h5 class="fw-bold mt-4">Address</h5>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" name="location" placeholder="Street/Area" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="district" class="form-label">District</label>
+                    <input type="text" class="form-control" id="district" name="district" placeholder="Enter district" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="division" class="form-label">Division</label>
+                    <input type="text" class="form-control" id="division" name="division" placeholder="Enter division" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="postCode" class="form-label">Post Code</label>
+                    <input type="text" class="form-control" id="postCode" name="postCode" placeholder="Enter postal code" required>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label fw-bold">Password</label>
@@ -27,13 +60,12 @@
             </div>
             <div class="mb-3">
                 <label for="confirmPassword" class="form-label fw-bold">Confirm Password</label>
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Re-enter your password" required>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password" required>
             </div>
             <div class="d-grid">
                 <button type="submit" class="btn btn-success btn-lg">Register</button>
             </div>
         </form>
-
         <p class="text-center mt-3">
             Already have an account? 
             <a href="/auth/login" class="text-primary">Login here</a>
