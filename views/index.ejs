@@ -11,9 +11,7 @@
   <body>
     <%- include('partials/navbar') %>
     <div class="container mt-5">
-      <!-- <h1 class="text-primary">Welcome to RailPass</h1>
-      <button class="btn btn-success">Book Ticket</button> -->
-      <%- include('partials/form') %>
+      <%- include('partials/form', {notLogin: notLogin}) %>
     </div>
     <%- include('partials/footer.ejs') %>
   </body>

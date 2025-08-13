@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 
 //Declare Route
 app.get("/", (req, res) => {
-  res.render("index");
+  res.redirect("/booking");
 });
 app.use("/auth", authRouter);
 app.use("/booking", bookingRouter);

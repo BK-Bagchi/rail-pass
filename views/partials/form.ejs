@@ -31,6 +31,10 @@
   </div>
 
   <div class="d-grid">
+    <% if(notLogin) {%>
+      <p class="text-danger text-center"><%= notLogin %><a href="/auth/login"> Login to Book Ticket</a></p>
+      
+    <% } %>
     <button type="submit" class="btn btn-primary btn-lg">Submit</button>
   </div>
 </form>

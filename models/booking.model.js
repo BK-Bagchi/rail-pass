@@ -6,14 +6,14 @@ const bookingSchema = new mongoose.Schema(
     train: { type: mongoose.Schema.Types.ObjectId, ref: "Train" },
     pnr: { type: String },
     seatClass: {
-      type: { type: String },
+      type: String,
       enum: [
         "AC_Sleeper",
         "AC_Chair",
-        "AC_Seat", //AC Cabin
+        "AC_Seat", // AC Cabin
         "First_Sleeper",
         "First_Chair",
-        "First_Seat", //First Cabin
+        "First_Seat", // First Cabin
         "General",
       ],
       default: "General",
@@ -25,7 +25,7 @@ const bookingSchema = new mongoose.Schema(
     toStation: { type: String },
     totalFare: { type: Number },
     status: {
-      type: { type: String },
+      type: String,
       enum: ["confirmed", "cancelled"],
       default: "confirmed",
     },
