@@ -61,6 +61,9 @@
             <div class="mb-3">
                 <label for="confirmPassword" class="form-label fw-bold">Confirm Password</label>
                 <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password" required>
+                <% if (passwordMissMatch)  {%>
+                    <p class="text-danger mt-1"><%= passwordMissMatch %></p>
+                <% } %>
             </div>
             <div class="d-grid">
                 <button type="submit" class="btn btn-success btn-lg">Register</button>

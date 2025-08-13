@@ -44,4 +44,4 @@ app.use("/booking", bookingRouter);
 app.use("/train", trainRouter);
 
 //Database Connection
-// dbConnection();
+dbConnection();
