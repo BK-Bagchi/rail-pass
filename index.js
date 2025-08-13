@@ -7,6 +7,7 @@ import dbConnection from "./config/database.js";
 import authRouter from "./routes/auth.route.js";
 import bookingRouter from "./routes/booking.route.js";
 import trainRouter from "./routes/train.route.js";
+import adminRouter from "./routes/admin.route.js";
 
 const app = express();
 const port = 4000;
@@ -42,6 +43,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRouter);
 app.use("/booking", bookingRouter);
 app.use("/train", trainRouter);
+app.use("/admin", adminRouter);
 
 //Database Connection
 dbConnection();
