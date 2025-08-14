@@ -6,9 +6,10 @@ const trainSchema = new mongoose.Schema(
     trainName: { type: String },
     route: [
       {
-        stationName: { type: String },
-        arrivalTime: { type: String },
-        departureTime: { type: String },
+        stationName: { type: String, required: true },
+        arrivalTime: { type: String, required: true },
+        departureTime: { type: String, required: true },
+        betweenStations: [{ type: String }], // array of station names
       },
     ],
     seats: {
