@@ -6,66 +6,77 @@
             <i class="bi bi-person-plus-fill me-2"></i> Add Train
         </button>
     </div>
-
-    <div class="table-responsive shadow-sm rounded">
-        <table class="table table-hover align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Photo</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Phone</th>
-                    <th scope="col">Date of Birth</th>
-                    <th scope="col">Role</th>
-                    <th scope="col" class="text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
+    <% if (!trains || trains.length === 0) { %>
+        <% if (trainFound) { %>
+            <div class="alert alert-warning text-center"><%= trainFound %></div>
+        <% } %>
+    <% } else { %>
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
                     <tr>
-                        <th scope="row">1</th>
-                        <td>
-                            <img src="" 
-                                 alt="User Photo" 
-                                 class="rounded-circle" 
-                                 style="width: 40px; height: 40px; object-fit: cover;">
-                        </td>
-                        <td>name</td>
-                        <td>email</td>
-                        <td>phone</td>
-                        <td>DoB</td>
-                        <td>Role</td>
-                        <td class="text-center">
-                            <!-- Edit Button -->
-                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"  data-bs-target="#editUserModal" onclick="openEditModal('')">
-                                Edit
-                            </button>
-
-                            <!-- Delete Button -->
-                            <a href="/admin/users/delete/" 
-                            class="btn btn-sm btn-danger" 
-                            onclick="return confirm('Are you sure?')">
-                                Delete
-                            </a>
-                        </td>
+                        <th>#</th>
+                        <th>Train Number</th>
+                        <th>Train Name</th>
+                        <th>Starting Station</th>
+                        <th>Ending Station</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Seats</th>
+                        <th class="text-center">Actions</th>
                     </tr>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    <% trains.forEach((train, index) => { %>
+                        <tr>
+                            <th scope="row"><%= index + 1 %></th>
+                            <td><%= train.trainNumber %></td>
+                            <td><%= train.trainName %></td>
+                            <td><%= train.startingStation %></td>
+                            <td><%= train.endingStation %></td>
+                            <td><%= train.departureTime %></td>
+                            <td><%= train.arrivalTime %></td>
+                            <td>
+                                <ul class="list-unstyled mb-0">
+                                    <% for (const seatType in train.seats) { %>
+                                        <li><%= seatType %>: <%= train.seats[seatType] %></li>
+                                    <% } %>
+                                </ul>
+                            </td>
+                            <td class="text-center">
+                                <!-- Edit Button -->
+                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editTrainModal" 
+                                    onclick="openEditTrainModal('<%= train._id %>', '<%= train.trainNumber %>', '<%= train.trainName %>', '<%= train.startingStation %>', '<%= train.endingStation %>', '<%= train.departureTime %>', '<%= train.arrivalTime %>',)">
+                                    Edit
+                                </button>
+
+                                <!-- Delete Button -->
+                                <a href="/admin/trains/delete/<%= train._id %>" 
+                                class="btn btn-sm btn-danger" 
+                                onclick="return confirm('Are you sure?')">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    <% } %>
 </main>
 
-<!-- Edit User Modal -->
-<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+<!-- Edit Train Modal -->
+<div class="modal fade" id="editTrainModal" tabindex="-1" aria-labelledby="editTrainModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form id="editUserForm" method="POST">
+      <form id="editTrainForm" method="POST">
         <div class="modal-header">
-          <h5 class="modal-title" id="editUserModalLabel">Edit Train</h5>
+          <h5 class="modal-title" id="editTrainModalLabel">Edit Train</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         
         <div class="modal-body">
-          <input type="hidden" name="id" id="editUserId">
+          <input type="hidden" name="id" id="editTrainId">
           
           <div class="mb-3">
             <label class="form-label">First Name</label>
@@ -114,7 +125,7 @@
 <div class="modal fade" id="addTrainModal" tabindex="-1" aria-labelledby="addTrainModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form id="addTrainForm" action="/admin/trains/add" method="POST">
+      <form id="addTrainForm" action="/admin/trains/addNewTrain" method="POST">
         <div class="modal-header">
           <h5 class="modal-title" id="addTrainModalLabel">Add New Train</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -163,7 +174,7 @@
                 <div id="stationsContainer">
                     <!-- Initial input field -->
                     <div class="input-group mb-2">
-                        <input type="text" class="form-control" name="betweenStations[]" placeholder="Enter station name">
+                        <input type="text" class="form-control" name="betweenStations" placeholder="Enter station name">
                         <button class="btn btn-danger remove-station-btn" type="button">&times;</button>
                     </div>
                 </div>
@@ -179,7 +190,7 @@
                     const div = document.createElement('div');
                     div.classList.add('input-group', 'mb-2');
                     div.innerHTML = `
-                        <input type="text" class="form-control" name="betweenStations[]" placeholder="Enter station name">
+                        <input type="text" class="form-control" name="betweenStations" placeholder="Enter station name">
                         <button class="btn btn-danger remove-station-btn" type="button">&times;</button>
                     `;
                     stationsContainer.appendChild(div);
@@ -205,31 +216,31 @@
           <div class="row mb-3">
             <div class="col-md-4 mb-2">
               <label class="form-label">AC Sleeper</label>
-              <input type="number" class="form-control" name="seats[AC_Sleeper]" min="0" value="0">
+              <input type="number" class="form-control" name="AC_Sleeper" min="0" value="0">
             </div>
             <div class="col-md-4 mb-2">
               <label class="form-label">AC Chair</label>
-              <input type="number" class="form-control" name="seats[AC_Chair]" min="0" value="0">
+              <input type="number" class="form-control" name="AC_Chair" min="0" value="0">
             </div>
             <div class="col-md-4 mb-2">
               <label class="form-label">AC Seat (Cabin)</label>
-              <input type="number" class="form-control" name="seats[AC_Seat]" min="0" value="0">
+              <input type="number" class="form-control" name="AC_Seat" min="0" value="0">
             </div>
             <div class="col-md-4 mb-2">
               <label class="form-label">First Sleeper</label>
-              <input type="number" class="form-control" name="seats[First_Sleeper]" min="0" value="0">
+              <input type="number" class="form-control" name="First_Sleeper" min="0" value="0">
             </div>
             <div class="col-md-4 mb-2">
               <label class="form-label">First Chair</label>
-              <input type="number" class="form-control" name="seats[First_Chair]" min="0" value="0">
+              <input type="number" class="form-control" name="First_Chair" min="0" value="0">
             </div>
             <div class="col-md-4 mb-2">
               <label class="form-label">First Seat (Cabin)</label>
-              <input type="number" class="form-control" name="seats[First_Seat]" min="0" value="0">
+              <input type="number" class="form-control" name="First_Seat" min="0" value="0">
             </div>
             <div class="col-md-4 mb-2">
               <label class="form-label">General</label>
-              <input type="number" class="form-control" name="seats[General]" min="0" value="0">
+              <input type="number" class="form-control" name="General" min="0" value="0">
             </div>
           </div>
         </div>
