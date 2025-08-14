@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="../js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <%- include("../partials/navbar.ejs") %>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <aside class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse vh-100 p-0">
+                <div class="position-sticky">
+                    <h4 class="text-light p-3 border-bottom">Admin Panel</h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="/admin/users">
+                                <i class="bi bi-people-fill me-2"></i> Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="/admin/trains">
+                                <i class="bi bi-train-front-fill me-2"></i> Trains
+                            </a>
+                        </li>
+                        <li class="nav-item mt-3">
+                            <a class="btn btn-danger w-100" href="/logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <h2 class="mb-4">Admin Dashboard</h2>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Manage Users</h5>
+                                <p class="card-text">View, edit, or remove users from the system.</p>
+                                <a href="/admin/users" class="btn btn-primary">Go to Users</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Manage Trains</h5>
+                                <p class="card-text">Add, update, or remove trains from the schedule.</p>
+                                <a href="/admin/trains" class="btn btn-success">Go to Trains</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <%- include("../partials/footer.ejs") %>
+</body>
+
+</html>

@@ -21,7 +21,7 @@ export const adminVerification = async (req, res) => {
       });
 
     req.session.user = user;
-    res.redirect("/booking");
+    res.redirect("/admin/dashboard");
   } catch (error) {
     res.status(500).json({ message: error.message || "Internal Server Error" });
   }
