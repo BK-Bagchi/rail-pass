@@ -14,8 +14,12 @@ const trainSchema = new mongoose.Schema(
       },
     ],
     seats: {
-      AC: { type: Number },
-      Sleeper: { type: Number },
+      AC_Sleeper: { type: Number },
+      AC_Chair: { type: Number },
+      AC_Seat: { type: Number }, // AC Cabin
+      First_Sleeper: { type: Number },
+      First_Chair: { type: Number },
+      First_Seat: { type: Number }, // First Cabin
       General: { type: Number },
     },
   },
