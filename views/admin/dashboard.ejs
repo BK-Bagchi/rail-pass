@@ -18,6 +18,11 @@
                     <h4 class="text-light p-3 border-bottom">Admin Panel</h4>
                     <ul class="nav flex-column">
                         <li class="nav-item">
+                            <a class="nav-link text-light" href="/admin/dashboard">
+                                <i class="bi bi-speedometer2 me-2"></i> Admin Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-light" href="/admin/users">
                                 <i class="bi bi-people-fill me-2"></i> Users
                             </a>
@@ -28,37 +33,21 @@
                             </a>
                         </li>
                         <li class="nav-item mt-3">
-                            <a class="btn btn-danger w-100" href="/logout">Logout</a>
+                            <a class="btn btn-danger w-100" href="/auth/logout">Logout</a>
                         </li>
                     </ul>
                 </div>
             </aside>
 
             <!-- Main Content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-                <h2 class="mb-4">Admin Dashboard</h2>
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <div class="card shadow-sm border-0">
-                            <div class="card-body">
-                                <h5 class="card-title">Manage Users</h5>
-                                <p class="card-text">View, edit, or remove users from the system.</p>
-                                <a href="/admin/users" class="btn btn-primary">Go to Users</a>
-                            </div>
-                        </div>
-                    </div>
+            <% if (management === "admin") { %>
+                <%- include("admin.ejs") %>
+            <% } else if (management === "users") { %>
+                <%- include("users.ejs") %>
+            <% } else if (management === "trains") { %>
+                <%- include("trains.ejs") %>
+            <% } %>
 
-                    <div class="col-md-6">
-                        <div class="card shadow-sm border-0">
-                            <div class="card-body">
-                                <h5 class="card-title">Manage Trains</h5>
-                                <p class="card-text">Add, update, or remove trains from the schedule.</p>
-                                <a href="/admin/trains" class="btn btn-success">Go to Trains</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
         </div>
     </div>
     <%- include("../partials/footer.ejs") %>

@@ -14,7 +14,19 @@ adminRouter.post("/login", adminVerification);
 
 //Admin Dashboard
 adminRouter.get("/dashboard", (req, res) => {
-  res.render("admin/dashboard");
+  if (!req.session.user) return res.redirect("/admin/login");
+  res.render("admin/dashboard", { management: "admin" });
+});
+
+// Admin User Management
+adminRouter.get("/users", (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
+  res.render("admin/dashboard", { management: "users" });
+});
+// Admin Train Management
+adminRouter.get("/trains", (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
+  res.render("admin/dashboard", { management: "trains" });
 });
 
 export default adminRouter;
