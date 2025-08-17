@@ -4,6 +4,7 @@ import {
   addNewTrain,
   deleteTrain,
   getAllTrain,
+  updateTrain,
 } from "../controllers/train.controller.js";
 import Train from "../models/train.model.js";
 
@@ -35,10 +36,7 @@ adminRouter.get("/trains", getAllTrain);
 // Admin Add New Train
 adminRouter.post("/trains/addNewTrain", addNewTrain);
 // Admin Edit Train
-adminRouter.post("/trains/editTrain", (req, res) => {
-  // Logic for editing a train will go here
-  res.status(501).send("Edit Train functionality not implemented yet.");
-});
+adminRouter.post("/trains/editTrain/:trainId", updateTrain);
 // Admin Delete Train
 adminRouter.get("/trains/deleteTrain/:trainId", deleteTrain);
 

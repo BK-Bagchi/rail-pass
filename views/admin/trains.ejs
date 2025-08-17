@@ -54,15 +54,10 @@
                         
                         <td class="text-center">
                             <!-- Edit Button -->
-                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"  ata-bs-target="#editTrainModal" onclick='openEditTrainModal(
-                                    "<%= train._id %>", 
-                                    "<%= train.trainNumber %>", 
-                                    "<%= train.trainName %>", 
-                                    JSON.parse(`<%- JSON.stringify(train.route) %>`), 
-                                    JSON.parse(`<%- JSON.stringify(train.seats) %>`)
-                                )'>
+                            <button class="btn btn-sm btn-warning"  data-bs-toggle="modal"  data-bs-target="#editTrainModal" data-id="<%= train._id %>">
                                 Edit
                             </button>
+
 
 
                             <!-- Delete Button -->
@@ -173,34 +168,13 @@
           <!-- Seats -->
           <h6 class="mb-2">Seats</h6>
           <div class="row mb-3">
-            <div class="col-md-4 mb-2">
-              <label class="form-label">AC Sleeper</label>
-              <input type="number" class="form-control" name="AC_Sleeper" min="0" value="0">
-            </div>
-            <div class="col-md-4 mb-2">
-              <label class="form-label">AC Chair</label>
-              <input type="number" class="form-control" name="AC_Chair" min="0" value="0">
-            </div>
-            <div class="col-md-4 mb-2">
-              <label class="form-label">AC Seat (Cabin)</label>
-              <input type="number" class="form-control" name="AC_Seat" min="0" value="0">
-            </div>
-            <div class="col-md-4 mb-2">
-              <label class="form-label">First Sleeper</label>
-              <input type="number" class="form-control" name="First_Sleeper" min="0" value="0">
-            </div>
-            <div class="col-md-4 mb-2">
-              <label class="form-label">First Chair</label>
-              <input type="number" class="form-control" name="First_Chair" min="0" value="0">
-            </div>
-            <div class="col-md-4 mb-2">
-              <label class="form-label">First Seat (Cabin)</label>
-              <input type="number" class="form-control" name="First_Seat" min="0" value="0">
-            </div>
-            <div class="col-md-4 mb-2">
-              <label class="form-label">General</label>
-              <input type="number" class="form-control" name="General" min="0" value="0">
-            </div>
+            <% const seatTypesInput = ["AC_Sleeper","AC_Chair","AC_Seat","First_Sleeper","First_Chair","First_Seat","General"]; %>
+            <% seatTypesInput.forEach(type => { %>
+              <div class="col-md-4 mb-2">
+                <label class="form-label"><%= type %></label>
+                <input type="number" class="form-control seat-input" name="<%= type %>" min="0" value="0">
+              </div>
+            <% }) %>
           </div>
         </div>
 
@@ -214,50 +188,63 @@
 </div>
 
 <!-- Edit Train Modal -->
-<div class="modal fade" id="editTrainModal" tabindex="-1" aria-labelledby="editTrainModalLabel" aria-hidden="true">
+ <div class="modal fade" id="editTrainModal" tabindex="-1" aria-labelledby="editTrainModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form id="editTrainForm" action="/trains/editTrain" method="POST">
+      <form id="editTrainForm" action="" method="POST">
         <div class="modal-header">
-          <h5 class="modal-title" id="editTrainModalLabel">Edit Train</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title">Edit Train</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        
+
         <div class="modal-body">
           <input type="hidden" name="id" id="editTrainId">
-          
-          <div class="mb-3">
-            <label class="form-label">First Name</label>
-            <input type="text" class="form-control" name="firstName" id="editFirstName" required>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Train Number</label>
+              <input type="text" class="form-control" name="trainNumber" id="editTrainNumber" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Train Name</label>
+              <input type="text" class="form-control" name="trainName" id="editTrainName" required>
+            </div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Last Name</label>
-            <input type="text" class="form-control" name="lastName" id="editLastName" required>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Starting Station</label>
+              <input type="text" class="form-control" name="startingStation" id="editStartingStation" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ending Station</label>
+              <input type="text" class="form-control" name="endingStation" id="editEndingStation" required>
+            </div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" name="email" id="editEmail" required>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Departure Time</label>
+              <input type="time" class="form-control" name="departureTime" id="editDepartureTime" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Arrival Time</label>
+              <input type="time" class="form-control" name="arrivalTime" id="editArrivalTime" required>
+            </div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Phone</label>
-            <input type="text" class="form-control" name="phone" id="editPhone" required>
+          <!-- Seats -->
+          <h6 class="mb-2">Seats</h6>
+          <div class="row mb-3">
+            <% const seatTypesEdit = ["AC_Sleeper","AC_Chair","AC_Seat","First_Sleeper","First_Chair","First_Seat","General"]; %>
+            <% seatTypesEdit.forEach(type => { %>
+              <div class="col-md-4 mb-2">
+                <label class="form-label"><%= type %></label>
+                <input type="number" class="form-control seat-input" name="<%= type %>" id="editSeat<%= type %>" min="0">
+              </div>
+            <% }) %>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Date of Birth</label>
-            <input type="date" class="form-control" name="dateOfBirth" id="editDOB" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Role</label>
-            <select class="form-control" name="role" id="editRole">
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
         </div>
 
         <div class="modal-footer">
@@ -268,7 +255,29 @@
     </div>
   </div>
 </div>
+<script>
+const trains = <%- JSON.stringify(trains) %>; // Pass all trains from server
 
+const editTrainModal = document.getElementById('editTrainModal');
+editTrainModal.addEventListener('show.bs.modal', function(event) {
+    const button = event.relatedTarget;
+    const trainId = button.getAttribute('data-id');
 
+    const train = trains.find(t => t._id === trainId);
+    if (!train) return;
 
+    document.getElementById('editTrainForm').action = `/admin/trains/editTrain/${train._id}`;
+    document.getElementById('editTrainId').value = train._id;
+    document.getElementById('editTrainNumber').value = train.trainNumber;
+    document.getElementById('editTrainName').value = train.trainName;
+    document.getElementById('editStartingStation').value = train.route[0].startingStation || '';
+    document.getElementById('editEndingStation').value = train.route[0].endingStation || '';
+    document.getElementById('editDepartureTime').value = train.route[0].departureTime || '';
+    document.getElementById('editArrivalTime').value = train.route[0].arrivalTime || '';
 
+    Object.keys(train.seats).forEach(type => {
+        const seatInput = document.getElementById('editSeat' + type);
+        if (seatInput) seatInput.value = train.seats[type];
+    });
+});
+</script>
