@@ -7,6 +7,7 @@ import {
   updateTrain,
 } from "../controllers/train.controller.js";
 import Train from "../models/train.model.js";
+import Station from "../models/station.model.js";
 
 const adminRouter = express.Router();
 //✔ Admin Login Page
@@ -42,9 +43,50 @@ adminRouter.post("/trains/editTrain/:trainId", updateTrain);
 adminRouter.get("/trains/deleteTrain/:trainId", deleteTrain);
 
 //Admin Station Management
-adminRouter.get("/stations", (req, res) => {
+adminRouter.get("/stations", async (req, res) => {
   if (!req.session.user) return res.redirect("/admin/login");
-  res.render("admin/dashboard", { management: "stations" });
+  try {
+    const allStations = await Station.find();
+    console.log(allStations);
+    if (!allStations || allStations.length === 0) {
+      return res.status(404).render("admin/dashboard", {
+        stations: null,
+        stationFound: "No stations found. Please add some stations.",
+        management: "stations",
+      });
+    }
+    res.render("admin/dashboard", {
+      stations: allStations,
+      stationFound: null,
+      management: "stations",
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: error.message || "Internal Server Error" });
+  }
+});
+// Admin Add New Station
+adminRouter.post("/stations/addStation", async (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
+  try {
+    const newStation = await Station.create({
+      stationName: req.body.stationName,
+      stationCode: req.body.stationCode,
+      address: {
+        district: req.body.district,
+        division: req.body.division,
+        subDivision: req.body.subDivision,
+      },
+    });
+    if (newStation) return res.status(201).redirect("/admin/stations");
+    else
+      return res
+        .status(400)
+        .redirect("/admin/stations?error=Failed to add station");
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Internal Server Error" });
+  }
 });
 
 export default adminRouter;

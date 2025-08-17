@@ -1,103 +1,144 @@
-<!-- Users Table Content -->
+<!-- Stations Table Content -->
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
     <h2 class="mb-4">Station Management</h2>
-    <div class="mb-3">
-        <a href="/admin/stations/addStation" class="btn btn-success">
-            <i class="bi bi-person-plus-fill me-2"></i> Add Station
-        </a>
-    </div>
 
+    <!-- Add Station Button -->
+    <div class="mb-3">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addStationModal">
+            <i class="bi bi-geo-alt-fill me-2"></i> Add Station
+        </button>
+    </div>
+    <% if (!stations || stations.length === 0) { %>
+        <% if (stationFound) { %>
+            <div class="alert alert-warning text-center"><%= stationFound %></div>
+        <% } %>
+    <% } else { %>
+    <!-- Stations Table -->
     <div class="table-responsive shadow-sm rounded">
         <table class="table table-hover align-middle">
             <thead class="table-dark">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Photo</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Phone</th>
-                    <th scope="col">Date of Birth</th>
-                    <th scope="col">Role</th>
+                    <th scope="col">Station Name</th>
+                    <th scope="col">Code</th>
+                    <th scope="col">District</th>
+                    <th scope="col">Division</th>
+                    <th scope="col">Sub-division</th>
                     <th scope="col" class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
+                <% stations.forEach((station, index) => { %>
                     <tr>
-                        <th scope="row">1</th>
-                        <td>
-                            <img src="" 
-                                 alt="User Photo" 
-                                 class="rounded-circle" 
-                                 style="width: 40px; height: 40px; object-fit: cover;">
-                        </td>
-                        <td>name</td>
-                        <td>email</td>
-                        <td>phone</td>
-                        <td>DoB</td>
-                        <td>Role</td>
+                        <th scope="row"><%= index + 1 %></th>
+                        <td><%= station.stationName %></td>
+                        <td><%= station.stationCode %></td>
+                        <td><%= station.address.district %></td>
+                        <td><%= station.address.division %></td>
+                        <td><%= station.address.subDivision %></td>
                         <td class="text-center">
                             <!-- Edit Button -->
-                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"  data-bs-target="#editUserModal" onclick="openEditModal('')">
+                            <button 
+                                class="btn btn-sm btn-warning" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#editStationModal"
+                                onclick='openEditStationModal(<%- JSON.stringify(station) %>)'>
                                 Edit
                             </button>
 
                             <!-- Delete Button -->
-                            <a href="/admin/users/delete/" 
-                            class="btn btn-sm btn-danger" 
-                            onclick="return confirm('Are you sure?')">
+                            <a 
+                                href="/admin/stations/delete/<%= station._id %>" 
+                                class="btn btn-sm btn-danger" 
+                                onclick="return confirm('Are you sure?')">
                                 Delete
                             </a>
                         </td>
                     </tr>
+                <% }) %>
             </tbody>
         </table>
     </div>
+    <% } %>
 </main>
 
-<!-- Edit User Modal -->
-<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+<!-- Add Station Modal -->
+<div class="modal fade" id="addStationModal" tabindex="-1" aria-labelledby="addStationModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form id="editUserForm" method="POST">
+      <form id="addStationForm" action="/admin/stations/addStation" method="POST">
         <div class="modal-header">
-          <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+          <h5 class="modal-title" id="addStationModalLabel">Add New Station</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        
+
         <div class="modal-body">
-          <input type="hidden" name="id" id="editUserId">
-          
-          <div class="mb-3">
-            <label class="form-label">First Name</label>
-            <input type="text" class="form-control" name="firstName" id="editFirstName" required>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Station Name</label>
+              <input type="text" class="form-control" name="stationName" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Station Code</label>
+              <input type="text" class="form-control" name="stationCode" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">District</label>
+              <input type="text" class="form-control" name="district" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Division</label>
+              <input type="text" class="form-control" name="division" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Sub-division</label>
+              <input type="text" class="form-control" name="subDivision" required>
+            </div>
           </div>
+        </div>
 
-          <div class="mb-3">
-            <label class="form-label">Last Name</label>
-            <input type="text" class="form-control" name="lastName" id="editLastName" required>
-          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-success">Add Station</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
-          <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" name="email" id="editEmail" required>
-          </div>
+<!-- Edit Station Modal -->
+<div class="modal fade" id="editStationModal" tabindex="-1" aria-labelledby="editStationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="editStationForm" method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editStationModalLabel">Edit Station</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
 
-          <div class="mb-3">
-            <label class="form-label">Phone</label>
-            <input type="text" class="form-control" name="phone" id="editPhone" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Date of Birth</label>
-            <input type="date" class="form-control" name="dateOfBirth" id="editDOB" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Role</label>
-            <select class="form-control" name="role" id="editRole">
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
+        <div class="modal-body">
+          <input type="hidden" name="id" id="editStationId">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Station Name</label>
+              <input type="text" class="form-control" name="name" id="editStationName" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Station Code</label>
+              <input type="text" class="form-control" name="code" id="editStationCode" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">District</label>
+              <input type="text" class="form-control" name="district" id="editStationDistrict" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Division</label>
+              <input type="text" class="form-control" name="division" id="editStationDivision" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Sub-division</label>
+              <input type="text" class="form-control" name="subDivision" id="editStationSubDivision" required>
+            </div>
           </div>
         </div>
 
@@ -110,3 +151,15 @@
   </div>
 </div>
 
+<script>
+    // Populate Edit Station Modal
+    function openEditStationModal(station) {
+        document.getElementById('editStationForm').action = `/admin/stations/edit/${station._id}`;
+        document.getElementById('editStationId').value = station._id;
+        document.getElementById('editStationName').value = station.name;
+        document.getElementById('editStationCode').value = station.code;
+        document.getElementById('editStationDistrict').value = station.district;
+        document.getElementById('editStationDivision').value = station.division;
+        document.getElementById('editStationSubDivision').value = station.subDivision;
+    }
+</script>

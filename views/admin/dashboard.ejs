@@ -71,7 +71,11 @@
                     trainFound: trainFound
                 }) %>
             <% } else if (management === "stations"){%>
-                <%- include("stations.ejs", { management }) %>
+                <%- include("stations.ejs", { 
+                    management:management, 
+                    stations: stations,
+                    stationFound: stationFound
+                }) %>
             <% }%>
         </div>
     </div>
