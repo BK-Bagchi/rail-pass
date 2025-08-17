@@ -58,3 +58,22 @@ export const addNewTrain = async (req, res) => {
     res.status(500).json({ message: error.message || "Internal Server Error" });
   }
 };
+
+export const deleteTrain = async (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
+
+  try {
+    const { trainId } = req.params;
+    const deleteTrain = await Train.findByIdAndDelete(trainId);
+
+    if (deleteTrain)
+      return res.redirect("/admin/trains?success=Train deleted successfully");
+    else return res.redirect("/admin/trains?error=Train not found");
+  } catch (error) {
+    console.error("Delete Train Error:", error);
+    return res.redirect(
+      "/admin/trains?error=" +
+        encodeURIComponent(error.message || "Internal Server Error")
+    );
+  }
+};
