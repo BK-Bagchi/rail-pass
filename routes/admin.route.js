@@ -35,8 +35,41 @@ adminRouter.get("/dashboard", (req, res) => {
 
 // Admin User Management--------------------------------------
 adminRouter.get("/users", getAllUser);
+// Admin Add New User
+adminRouter.post("/users/addUser", async (req, res) => {
+  //not premissioned yet
+  if (!req.session.user) return res.redirect("/admin/login");
+  try {
+    const newUser = await User.create({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      phone: req.body.phone,
+      dateOfBirth: req.body.dateOfBirth,
+      role: req.body.role,
+    });
+    if (newUser) return res.status(201).redirect("/admin/users");
+    else
+      return res.status(400).redirect("/admin/users?error=Failed to add user");
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Internal Server Error" });
+  }
+});
 // Admin Edit User
 adminRouter.post("/users/editUser/:userId", updateUser);
+// Admin Delete User
+adminRouter.get("/users/deleteUser/:userId", async (req, res) => {
+  //not premissioned yet
+  if (!req.session.user) return res.redirect("/admin/login");
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.userId);
+    if (deletedUser)
+      return res.redirect("/admin/users?success=User deleted successfully");
+    else return res.redirect("/admin/users?error=Failed to delete user");
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Internal Server Error" });
+  }
+});
 
 // Admin Train Management -------------------------------------
 adminRouter.get("/trains", getAllTrain);
