@@ -1,6 +1,6 @@
 import express from "express";
 import { adminVerification } from "../controllers/admin.controller.js";
-import { getAllTrain } from "../controllers/train.controller.js";
+import { addNewTrain, getAllTrain } from "../controllers/train.controller.js";
 
 const adminRouter = express.Router();
 //✔ Admin Login Page
@@ -27,5 +27,7 @@ adminRouter.get("/users", (req, res) => {
 
 // Admin Train Management
 adminRouter.get("/trains", getAllTrain);
+// Admin Add New Train
+adminRouter.post("/trains/addNewTrain", addNewTrain);
 
 export default adminRouter;

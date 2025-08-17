@@ -38,15 +38,24 @@
                     </ul>
                 </div>
             </aside>
+            <script>
+                console.log("management:", "<%= management %>");
+            </script>
+
 
             <!-- Main Content -->
             <% if (management === "admin") { %>
-                <%- include("admin.ejs") %>
+                <%- include("admin.ejs", { management }) %>
             <% } else if (management === "users") { %>
-                <%- include("users.ejs") %>
+                <%- include("users.ejs", { management }) %>
             <% } else if (management === "trains") { %>
-                <%- include("trains.ejs") %>
+                <%- include("trains.ejs", {
+                    management: management ,
+                    trains: trains,
+                    trainFound: trainFound
+                }) %>
             <% } %>
+
 
         </div>
     </div>

@@ -13,54 +13,69 @@
     <% } else { %>
         <div class="table-responsive shadow-sm rounded">
             <table class="table table-hover align-middle">
-                <thead class="table-dark">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Train Number</th>
+                    <th>Train Name</th>
+                    <th>Starting Station</th>
+                    <th>Ending Station</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
+                    <th>Stations Between</th>
+                    <th>Seats</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% trains.forEach((train, index) => { %>
+                    <% const start = train.route[0]; %>
+                    <% const end = train.route[train.route.length - 1]; %>
                     <tr>
-                        <th>#</th>
-                        <th>Train Number</th>
-                        <th>Train Name</th>
-                        <th>Starting Station</th>
-                        <th>Ending Station</th>
-                        <th>Departure</th>
-                        <th>Arrival</th>
-                        <th>Seats</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% trains.forEach((train, index) => { %>
-                        <tr>
-                            <th scope="row"><%= index + 1 %></th>
-                            <td><%= train.trainNumber %></td>
-                            <td><%= train.trainName %></td>
-                            <td><%= train.startingStation %></td>
-                            <td><%= train.endingStation %></td>
-                            <td><%= train.departureTime %></td>
-                            <td><%= train.arrivalTime %></td>
-                            <td>
-                                <ul class="list-unstyled mb-0">
-                                    <% for (const seatType in train.seats) { %>
-                                        <li><%= seatType %>: <%= train.seats[seatType] %></li>
-                                    <% } %>
-                                </ul>
-                            </td>
-                            <td class="text-center">
-                                <!-- Edit Button -->
-                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editTrainModal" 
-                                    onclick="openEditTrainModal('<%= train._id %>', '<%= train.trainNumber %>', '<%= train.trainName %>', '<%= train.startingStation %>', '<%= train.endingStation %>', '<%= train.departureTime %>', '<%= train.arrivalTime %>',)">
-                                    Edit
-                                </button>
+                        <th scope="row"><%= index + 1 %></th>
+                        <td><%= train.trainNumber %></td>
+                        <td><%= train.trainName %></td>
+                        <td><%= train.route[0].startingStation %></td>
+                        <td><%= train.route[0].endingStation %></td>
+                        <td><%= train.route[0].departureTime %></td>
+                        <td><%= train.route[0].arrivalTime %></td>
+                        <td><%= train.route[0].betweenStations %></td>
+                        <td>
+                            <ul class="list-unstyled mb-0">
+                                <li>AC_Sleeper: <%= train.seats.AC_Sleeper %></li>
+                                <li>AC_Chair: <%= train.seats.AC_Chair %></li>
+                                <li>AC_Seat: <%= train.seats.AC_Seat %></li>
+                                <li>First_Sleeper: <%= train.seats.First_Sleeper %></li>
+                                <li>First_Chair: <%= train.seats.First_Chair %></li>
+                                <li>First_Seat: <%= train.seats.First_Seat %></li>
+                                <li>General: <%= train.seats.General %></li>
+                            </ul>
+                        </td>
+                        
+                        <td class="text-center">
+                            <!-- Edit Button -->
+                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"  ata-bs-target="#editTrainModal" onclick='openEditTrainModal(
+                                    "<%= train._id %>", 
+                                    "<%= train.trainNumber %>", 
+                                    "<%= train.trainName %>", 
+                                    JSON.parse(`<%- JSON.stringify(train.route) %>`), 
+                                    JSON.parse(`<%- JSON.stringify(train.seats) %>`)
+                                )'>
+                                Edit
+                            </button>
 
-                                <!-- Delete Button -->
-                                <a href="/admin/trains/delete/<%= train._id %>" 
-                                class="btn btn-sm btn-danger" 
-                                onclick="return confirm('Are you sure?')">
-                                    Delete
-                                </a>
-                            </td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
+
+                            <!-- Delete Button -->
+                            <a href="/admin/trains/delete/<%= train._id %>" 
+                            class="btn btn-sm btn-danger" 
+                            onclick="return confirm('Are you sure?')">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
         </div>
     <% } %>
 </main>
