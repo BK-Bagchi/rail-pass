@@ -88,5 +88,47 @@ adminRouter.post("/stations/addStation", async (req, res) => {
     res.status(500).json({ message: error.message || "Internal Server Error" });
   }
 });
+// Admin Edit Station
+adminRouter.post("/stations/editStation/:stationId", async (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
+  try {
+    const updatedStation = await Station.findByIdAndUpdate(
+      req.params.stationId,
+      {
+        stationName: req.body.stationName,
+        stationCode: req.body.stationCode,
+        address: {
+          district: req.body.district,
+          division: req.body.division,
+          subDivision: req.body.subDivision,
+        },
+      },
+      { new: true }
+    );
+    if (updatedStation)
+      return res.redirect(
+        "/admin/stations?success=Station updated successfully"
+      );
+    else return res.redirect("/admin/stations?error=Failed to update station");
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Internal Server Error" });
+  }
+});
+// Admin Delete Station
+adminRouter.get("/stations/deleteStation/:stationId", async (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
+  try {
+    const deletedStation = await Station.findByIdAndDelete(
+      req.params.stationId
+    );
+    if (deletedStation)
+      return res.redirect(
+        "/admin/stations?success=Station deleted successfully"
+      );
+    else return res.redirect("/admin/stations?error=Failed to delete station");
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Internal Server Error" });
+  }
+});
 
 export default adminRouter;

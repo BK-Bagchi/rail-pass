@@ -48,7 +48,7 @@
 
                             <!-- Delete Button -->
                             <a 
-                                href="/admin/stations/delete/<%= station._id %>" 
+                                href="/admin/stations/deleteStation/<%= station._id %>" 
                                 class="btn btn-sm btn-danger" 
                                 onclick="return confirm('Are you sure?')">
                                 Delete
@@ -110,7 +110,7 @@
 <div class="modal fade" id="editStationModal" tabindex="-1" aria-labelledby="editStationModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form id="editStationForm" method="POST">
+      <form id="editStationForm" action="" method="POST">
         <div class="modal-header">
           <h5 class="modal-title" id="editStationModalLabel">Edit Station</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -121,11 +121,11 @@
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label">Station Name</label>
-              <input type="text" class="form-control" name="name" id="editStationName" required>
+              <input type="text" class="form-control" name="stationName" id="editStationName" required>
             </div>
             <div class="col-md-6">
               <label class="form-label">Station Code</label>
-              <input type="text" class="form-control" name="code" id="editStationCode" required>
+              <input type="text" class="form-control" name="stationCode" id="editStationCode" required>
             </div>
             <div class="col-md-4">
               <label class="form-label">District</label>
@@ -154,12 +154,12 @@
 <script>
     // Populate Edit Station Modal
     function openEditStationModal(station) {
-        document.getElementById('editStationForm').action = `/admin/stations/edit/${station._id}`;
+        document.getElementById('editStationForm').action = `/admin/stations/editStation/${station._id}`;
         document.getElementById('editStationId').value = station._id;
-        document.getElementById('editStationName').value = station.name;
-        document.getElementById('editStationCode').value = station.code;
-        document.getElementById('editStationDistrict').value = station.district;
-        document.getElementById('editStationDivision').value = station.division;
-        document.getElementById('editStationSubDivision').value = station.subDivision;
+        document.getElementById('editStationName').value = station.stationName;
+        document.getElementById('editStationCode').value = station.stationCode;
+        document.getElementById('editStationDistrict').value = station.address.district;
+        document.getElementById('editStationDivision').value = station.address.division;
+        document.getElementById('editStationSubDivision').value = station.address.subDivision;
     }
 </script>
