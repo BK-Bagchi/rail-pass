@@ -14,6 +14,7 @@ adminRouter.get("/", (req, res) => {
   res.redirect("/admin/login");
 });
 adminRouter.get("/login", (req, res) => {
+  if (req.session.user) return res.redirect("/admin/dashboard");
   res.render("admin/login", { userMissMatch: null, passwordMissMatch: null });
 });
 //✔ Admin Login post
@@ -39,5 +40,11 @@ adminRouter.post("/trains/addNewTrain", addNewTrain);
 adminRouter.post("/trains/editTrain/:trainId", updateTrain);
 // Admin Delete Train
 adminRouter.get("/trains/deleteTrain/:trainId", deleteTrain);
+
+//Admin Station Management
+adminRouter.get("/stations", (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
+  res.render("admin/dashboard", { management: "stations" });
+});
 
 export default adminRouter;

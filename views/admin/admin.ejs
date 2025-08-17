@@ -2,22 +2,35 @@
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
     <h2 class="mb-4">Admin Dashboard</h2>
     <div class="row g-4">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h5 class="card-title">Manage Users</h5>
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 rounded-3 hover-shadow transition" style="cursor: pointer;">
+                <div class="card-body text-center">
+                    <i class="bi bi-people fs-2 mb-3 text-primary"></i>
+                    <h5 class="card-title fw-bold">Manage Users</h5>
                     <p class="card-text">View, edit, or remove users from the system.</p>
                     <a href="/admin/users" class="btn btn-primary">Go to Users</a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h5 class="card-title">Manage Trains</h5>
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 rounded-3 hover-shadow transition" style="cursor: pointer;">
+                <div class="card-body text-center">
+                    <i class="bi bi-train-front fs-2 mb-3 text-success"></i>
+                    <h5 class="card-title fw-bold">Manage Trains</h5>
                     <p class="card-text">Add, update, or remove trains from the schedule.</p>
                     <a href="/admin/trains" class="btn btn-success">Go to Trains</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 rounded-3 hover-shadow transition" style="cursor: pointer;">
+                <div class="card-body text-center">
+                    <i class="bi bi-signpost-2 fs-2 mb-3 text-warning"></i>
+                    <h5 class="card-title fw-bold">Manage Stations</h5>
+                    <p class="card-text">Add, update, or remove stations from the list.</p>
+                    <a href="/admin/stations" class="btn btn-warning">Go to Stations</a>
                 </div>
             </div>
         </div>
