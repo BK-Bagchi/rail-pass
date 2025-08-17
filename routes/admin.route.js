@@ -12,6 +12,8 @@ import {
   getAllStation,
   updateStation,
 } from "../controllers/station.controller.js";
+import User from "../models/user.model.js";
+import { getAllUser, updateUser } from "../controllers/user.controller.js";
 
 const adminRouter = express.Router();
 //✔ Admin Login Page
@@ -25,19 +27,18 @@ adminRouter.get("/login", (req, res) => {
 //✔ Admin Login post
 adminRouter.post("/login", adminVerification);
 
-//Admin Dashboard
+//Admin Dashboard-----------------------------------------------
 adminRouter.get("/dashboard", (req, res) => {
   if (!req.session.user) return res.redirect("/admin/login");
   res.render("admin/dashboard", { management: "admin" });
 });
 
-// Admin User Management
-adminRouter.get("/users", (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
-  res.render("admin/dashboard", { management: "users" });
-});
+// Admin User Management--------------------------------------
+adminRouter.get("/users", getAllUser);
+// Admin Edit User
+adminRouter.post("/users/editUser/:userId", updateUser);
 
-// Admin Train Management
+// Admin Train Management -------------------------------------
 adminRouter.get("/trains", getAllTrain);
 // Admin Add New Train
 adminRouter.post("/trains/addNewTrain", addNewTrain);
@@ -46,7 +47,7 @@ adminRouter.post("/trains/editTrain/:trainId", updateTrain);
 // Admin Delete Train
 adminRouter.get("/trains/deleteTrain/:trainId", deleteTrain);
 
-//Admin Station Management
+//Admin Station Management-------------------------------------
 adminRouter.get("/stations", getAllStation);
 // Admin Add New Station
 adminRouter.post("/stations/addStation", addNewStation);

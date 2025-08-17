@@ -63,7 +63,11 @@
             <% if (management === "admin") { %>
                 <%- include("admin.ejs", { management }) %>
             <% } else if (management === "users") { %>
-                <%- include("users.ejs", { management }) %>
+                <%- include("users.ejs", { 
+                    management: management,
+                    users: users,
+                    userFound: userFound
+                 }) %>
             <% } else if (management === "trains") { %>
                 <%- include("trains.ejs", {
                     management: management ,
