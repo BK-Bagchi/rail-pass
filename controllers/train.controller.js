@@ -49,16 +49,11 @@ export const addNewTrain = async (req, res) => {
         General: Number(req.body.General),
       },
     });
-    if (newTrain)
-      return res.status(201).render("admin/dashboard", {
-        management: "trains",
-        trainAdded: "New train added successfully.",
-      });
+    if (newTrain) return res.status(201).redirect("/admin/trains");
     else
-      return res.status(400).render("admin/dashboard", {
-        management: "trains",
-        trainAdded: "Failed to add new train. Please try again.",
-      });
+      return res
+        .status(400)
+        .redirect("/admin/trains?error=Failed to add train");
   } catch (error) {
     res.status(500).json({ message: error.message || "Internal Server Error" });
   }
