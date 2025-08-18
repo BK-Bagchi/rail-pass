@@ -1,6 +1,7 @@
 import Booking from "../models/booking.model.js";
 
 export const createBooking = async (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
   try {
     if (!req.session)
       return res

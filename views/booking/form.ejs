@@ -1,0 +1,107 @@
+<form action="" method="POST" class="p-4 shadow rounded bg-light" style="max-width: 500px; margin: auto;">
+  <h3 class="mb-4 text-center">Book Your Ticket</h3>
+
+  <!-- From Station -->
+  <div class="mb-3">
+    <label for="fromStation" class="form-label fw-bold">From Station</label>
+    <input type="text" class="form-control" id="fromStation" name="fromStation" placeholder="Select Departure Station" data-bs-toggle="modal" data-bs-target="#stationModal" onclick="setActiveField('fromStation')" readonly required>
+  </div>
+
+  <!-- To Station -->
+  <div class="mb-3">
+    <label for="toStation" class="form-label fw-bold">To Station</label>
+    <input type="text" class="form-control" id="toStation" name="toStation" placeholder="Select destination station" data-bs-toggle="modal" data-bs-target="#stationModal" onclick="setActiveField('toStation')" readonly required>
+  </div>
+
+  <div class="mb-3">
+    <label for="seatClass" class="form-label fw-bold">Seat Class</label>
+    <select class="form-select" id="seatClass" name="seatClass" required>
+      <option value="" class="d-none">Select seat class</option>
+      <option value="AC_Sleeper">AC_Sleeper</option>
+      <option value="AC_Chair">AC_Chair</option>
+      <option value="AC_Seat">AC_Seat</option>
+      <option value="First_Sleeper">First_Sleeper</option>
+      <option value="First_Chair">First_Chair</option>
+      <option value="First_Seat">First_Seat</option>
+      <option value="General">General</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="journeyDate" class="form-label fw-bold">Journey Date</label>
+    <input type="date" class="form-control" id="journeyDate" name="journeyDate" required>
+  </div>
+
+  <div class="d-grid">
+    <button type="submit" class="btn btn-primary w-100" onclick="logData()">Book Now</button>
+    <% if(!notLogin) {%>
+      <br>
+      <p class="text-danger text-center"><a href="/auth/login"> Login to Book Ticket</a></p>
+    <% } %>
+  </div>
+</form>
+
+<!-- Station Modal -->
+<div class="modal fade" id="stationModal" tabindex="-1" aria-labelledby="stationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="stationModalLabel">Select Station</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control mb-3" id="stationSearch" placeholder="Search station...">
+        <ul class="list-group" id="stationList" style="max-height: 300px; overflow-y: auto;">
+          <li class="list-group-item station-item">Dhaka</li>
+          <li class="list-group-item station-item">Chattogram</li>
+          <li class="list-group-item station-item">Sylhet</li>
+          <li class="list-group-item station-item">Rajshahi</li>
+          <li class="list-group-item station-item">Khulna</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  let activeField = null;
+  // Track which input (fromStation or toStation) is active
+  function setActiveField(fieldId) {
+    activeField = fieldId;
+  }
+
+  // Search filter
+  document.getElementById("stationSearch").addEventListener("input", function () {
+    let filter = this.value.toLowerCase();
+    document.querySelectorAll("#stationList .station-item").forEach(item => {
+      item.style.display = item.textContent.toLowerCase().includes(filter) ? "" : "none";
+    });
+  });
+
+  // Click on station -> insert into active field
+  document.querySelectorAll("#stationList .station-item").forEach(item => {
+    item.addEventListener("click", function () {
+      if (activeField) {
+        document.getElementById(activeField).value = this.textContent;
+      }
+      // Close modal after selection
+      var modal = bootstrap.Modal.getInstance(document.getElementById("stationModal"));
+      modal.hide();
+    });
+  });
+
+  const logData = () => {
+    const fromStation = document.getElementById("fromStation").value;
+    const toStation = document.getElementById("toStation").value;
+    const seatClass = document.getElementById("seatClass").value;
+    const journeyDate = document.getElementById("journeyDate").value;
+
+    console.log("From Station:", fromStation);
+    console.log("To Station:", toStation);
+    console.log("Seat Class:", seatClass);
+    console.log("Journey Date:", journeyDate);
+  };
+</script>
+
+

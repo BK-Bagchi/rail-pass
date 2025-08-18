@@ -5,7 +5,7 @@ const bookingRouter = express.Router();
 
 //✔ Booking Home Page
 bookingRouter.get("/", (req, res) => {
-  res.render("index", { notLogin: null });
+  res.render("index", { notLogin: req.session.user });
 });
 //✔ Create Booking
 bookingRouter.post("/", createBooking);
