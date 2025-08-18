@@ -99,6 +99,25 @@
       });
     }
   });
+
+  //Makes the date input field only allow today to future 15 day dates
+  const journeyDateInput = document.getElementById("journeyDate");
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
+  const yyyy = today.getFullYear();
+
+  const minDate = `${yyyy}-${mm}-${dd}`;
+
+  const maxDateObj = new Date();
+  maxDateObj.setDate(today.getDate() + 15);
+  const ddMax = String(maxDateObj.getDate()).padStart(2, '0');
+  const mmMax = String(maxDateObj.getMonth() + 1).padStart(2, '0');
+  const yyyyMax = maxDateObj.getFullYear();
+  const maxDate = `${yyyyMax}-${mmMax}-${ddMax}`;
+
+  journeyDateInput.setAttribute("min", minDate);
+  journeyDateInput.setAttribute("max", maxDate);
 </script>
 
 
