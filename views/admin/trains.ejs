@@ -29,17 +29,15 @@
             </thead>
             <tbody>
                 <% trains.forEach((train, index) => { %>
-                    <% const start = train.route[0]; %>
-                    <% const end = train.route[train.route.length - 1]; %>
                     <tr>
                         <th scope="row"><%= index + 1 %></th>
                         <td><%= train.trainNumber %></td>
                         <td><%= train.trainName %></td>
-                        <td><%= train.route[0].startingStation %></td>
-                        <td><%= train.route[0].endingStation %></td>
-                        <td><%= train.route[0].departureTime %></td>
-                        <td><%= train.route[0].arrivalTime %></td>
-                        <td><%= train.route[0].betweenStations %></td>
+                        <td><%= train.route.startingStation %></td>
+                        <td><%= train.route.endingStation %></td>
+                        <td><%= train.route.departureTime %></td>
+                        <td><%= train.route.arrivalTime %></td>
+                        <td><%= train.route.betweenStations %></td>
                         <td>
                             <ul class="list-unstyled mb-0">
                                 <li>AC_Sleeper: <%= train.seats.AC_Sleeper %></li>
@@ -270,10 +268,10 @@ editTrainModal.addEventListener('show.bs.modal', function(event) {
     document.getElementById('editTrainId').value = train._id;
     document.getElementById('editTrainNumber').value = train.trainNumber;
     document.getElementById('editTrainName').value = train.trainName;
-    document.getElementById('editStartingStation').value = train.route[0].startingStation || '';
-    document.getElementById('editEndingStation').value = train.route[0].endingStation || '';
-    document.getElementById('editDepartureTime').value = train.route[0].departureTime || '';
-    document.getElementById('editArrivalTime').value = train.route[0].arrivalTime || '';
+    document.getElementById('editStartingStation').value = train.route.startingStation || '';
+    document.getElementById('editEndingStation').value = train.route.endingStation || '';
+    document.getElementById('editDepartureTime').value = train.route.departureTime || '';
+    document.getElementById('editArrivalTime').value = train.route.arrivalTime || '';
 
     Object.keys(train.seats).forEach(type => {
         const seatInput = document.getElementById('editSeat' + type);

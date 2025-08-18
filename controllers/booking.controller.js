@@ -15,3 +15,13 @@ export const searchForTrain = async (req, res) => {
       .json({ message: error.message || "Internal Server Error" });
   }
 };
+
+// export const checkTrainList = async (req, res) => {
+//   if (!req.session.user) return res.redirect("/auth/login");
+//   try {
+//     console.log("Checking train list with data:", req.body);
+//     res.send("Train list checked successfully");
+//   } catch (error) {
+//     res.status(500).json({ message: error.message || "Internal Server Error" });
+//   }
+// };
