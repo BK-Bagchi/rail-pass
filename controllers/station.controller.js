@@ -3,7 +3,7 @@ import Station from "../models/station.model.js";
 export const getAllStation = async (req, res) => {
   if (!req.session.user) return res.redirect("/admin/login");
   try {
-    const allStations = await Station.find();
+    const allStations = await Station.find().sort({ stationName: 1 });
     if (!allStations || allStations.length === 0) {
       return res.status(404).render("admin/dashboard", {
         stations: null,
