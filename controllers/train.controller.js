@@ -1,3 +1,4 @@
+import Station from "../models/station.model.js";
 import Train from "../models/train.model.js";
 
 export const getAllTrain = async (req, res) => {
@@ -50,6 +51,26 @@ export const addNewTrain = async (req, res) => {
     const filteredStations = betweenStations.filter(
       (station) => Object.keys(station).length > 0
     );
+
+    // Between stations are inserted into the Station model
+    const stationsToInsert = filteredStations
+      .filter(
+        (station) => station.stationName && station.stationName.trim() !== ""
+      )
+      .map((station) => ({
+        stationName: station.stationName,
+        stationCode: "",
+        address: {
+          district: "",
+          division: "",
+          subDivision: "",
+        },
+      }));
+
+    // Insert all stations at once
+    if (stationsToInsert.length > 0) {
+      await Station.insertMany(stationsToInsert);
+    }
 
     // Create new train
     const newTrain = await Train.create({
