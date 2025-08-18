@@ -20,7 +20,18 @@ export const searchForTrain = async (req, res) => {
 export const checkTrainList = async (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
   try {
-    // console.log("Checking train list with data:", req.body); formStation, toStation, seatClass, journeyDate
+    //Define fares for each seat class
+    // This will be moved to a config file or database later
+    // For now, hardcoding the fares
+    const fares = {
+      AC_Sleeper: 1500,
+      AC_Chair: 1000,
+      AC_Seat: 800,
+      First_Sleeper: 600,
+      First_Chair: 500,
+      First_Seat: 400,
+      General: 200,
+    };
     const { fromStation, toStation, seatClass, journeyDate } = req.body;
     const getAllTrains = await Train.find({
       $and: [
@@ -40,7 +51,7 @@ export const checkTrainList = async (req, res) => {
     }).sort({ trainName: 1 });
 
     if (!getAllTrains || getAllTrains.length === 0)
-      return res.status(404).render("booking/selectTrain", {
+      return res.status(404).render("booking/showTrains", {
         trains: null,
         trainFound: "No trains found for the selected route.",
         fromStation: null,
@@ -49,13 +60,14 @@ export const checkTrainList = async (req, res) => {
         journeyDate: null,
       });
 
-    res.render("booking/selectTrain", {
+    res.render("booking/showTrains", {
       trains: getAllTrains,
       trainFound: null,
       fromStation,
       toStation,
       seatClass,
       journeyDate,
+      fares,
     });
   } catch (error) {
     res.status(500).json({ message: error.message || "Internal Server Error" });
