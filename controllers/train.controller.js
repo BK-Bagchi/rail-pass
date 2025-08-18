@@ -2,7 +2,6 @@ import Train from "../models/train.model.js";
 
 export const getAllTrain = async (req, res) => {
   if (!req.session.user) return res.redirect("/admin/login");
-
   try {
     const allTrain = await Train.find();
     if (!allTrain || allTrain.length === 0) {
@@ -25,66 +24,112 @@ export const getAllTrain = async (req, res) => {
 };
 
 export const addNewTrain = async (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
   try {
-    // Create a new train instance
+    // prettier-ignore
+    const { trainNumber, trainName, startingStation, endingStation, arrivalTime, departureTime, AC_Sleeper, AC_Chair, AC_Seat, First_Sleeper, First_Chair, First_Seat, General, ...rest } = req.body;
+
+    // Transform flat betweenStations keys into array of objects
+    const betweenStations = [];
+    Object.keys(rest).forEach((key) => {
+      const match = key.match(/betweenStations\[(\d+)\]\[(\w+)\]/);
+      if (match) {
+        const index = parseInt(match[1]);
+        const field = match[2];
+        const value = rest[key];
+
+        // Only assign if value is not null, undefined, or empty string
+        if (value !== null && value !== undefined && value !== "") {
+          if (!betweenStations[index]) betweenStations[index] = {};
+          betweenStations[index][field] = value;
+        }
+      }
+    });
+
+    // Remove any empty objects that might remain
+    const filteredStations = betweenStations.filter(
+      (station) => Object.keys(station).length > 0
+    );
+
+    // Create new train
     const newTrain = await Train.create({
-      trainNumber: req.body.trainNumber,
-      trainName: req.body.trainName,
-      route: [
-        {
-          startingStation: req.body.startingStation,
-          endingStation: req.body.endingStation,
-          arrivalTime: req.body.arrivalTime,
-          departureTime: req.body.departureTime,
-          betweenStations: req.body.betweenStations, // array of station names
-        },
-      ],
+      trainNumber,
+      trainName,
+      route: {
+        startingStation,
+        endingStation,
+        arrivalTime,
+        departureTime,
+        betweenStations,
+      },
       seats: {
-        AC_Sleeper: Number(req.body.AC_Sleeper),
-        AC_Chair: Number(req.body.AC_Chair),
-        AC_Seat: Number(req.body.AC_Seat),
-        First_Sleeper: Number(req.body.First_Sleeper),
-        First_Chair: Number(req.body.First_Chair),
-        First_Seat: Number(req.body.First_Seat),
-        General: Number(req.body.General),
+        AC_Sleeper: Number(AC_Sleeper),
+        AC_Chair: Number(AC_Chair),
+        AC_Seat: Number(AC_Seat),
+        First_Sleeper: Number(First_Sleeper),
+        First_Chair: Number(First_Chair),
+        First_Seat: Number(First_Seat),
+        General: Number(General),
       },
     });
-    if (newTrain) return res.status(201).redirect("/admin/trains");
+
+    if (newTrain)
+      return res
+        .status(201)
+        .redirect("/admin/trains?success=Train added successfully");
     else
       return res
         .status(400)
         .redirect("/admin/trains?error=Failed to add train");
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message || "Internal Server Error" });
   }
 };
 
 export const updateTrain = async (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
   const { trainId } = req.params;
-
   try {
+    // prettier-ignore
+    const { trainNumber, trainName, startingStation, endingStation, arrivalTime, departureTime, AC_Sleeper, AC_Chair, AC_Seat, First_Sleeper, First_Chair, First_Seat, General, ...rest } = req.body;
+
+    // Transform flat betweenStations keys into array of objects
+    const betweenStations = [];
+    Object.keys(rest).forEach((key) => {
+      const match = key.match(/betweenStations\[(\d+)\]\[(\w+)\]/);
+      if (match) {
+        const index = parseInt(match[1]);
+        const field = match[2];
+        const value = rest[key];
+
+        // Only assign if value is not null, undefined, or empty string
+        if (value !== null && value !== undefined && value !== "") {
+          if (!betweenStations[index]) betweenStations[index] = {};
+          betweenStations[index][field] = value;
+        }
+      }
+    });
     const updatedData = await Train.findByIdAndUpdate(
       trainId,
       {
-        trainNumber: req.body.trainNumber,
-        trainName: req.body.trainName,
-        route: [
-          {
-            startingStation: req.body.startingStation,
-            endingStation: req.body.endingStation,
-            arrivalTime: req.body.arrivalTime,
-            departureTime: req.body.departureTime,
-            // betweenStations: req.body.betweenStations, // array of station names
-          },
-        ],
+        trainNumber,
+        trainName,
+        route: {
+          startingStation,
+          endingStation,
+          arrivalTime,
+          departureTime,
+          betweenStations,
+        },
         seats: {
-          AC_Sleeper: Number(req.body.AC_Sleeper),
-          AC_Chair: Number(req.body.AC_Chair),
-          AC_Seat: Number(req.body.AC_Seat),
-          First_Sleeper: Number(req.body.First_Sleeper),
-          First_Chair: Number(req.body.First_Chair),
-          First_Seat: Number(req.body.First_Seat),
-          General: Number(req.body.General),
+          AC_Sleeper: Number(AC_Sleeper),
+          AC_Chair: Number(AC_Chair),
+          AC_Seat: Number(AC_Seat),
+          First_Sleeper: Number(First_Sleeper),
+          First_Chair: Number(First_Chair),
+          First_Seat: Number(First_Seat),
+          General: Number(General),
         },
       },
       { new: true }
@@ -103,7 +148,6 @@ export const updateTrain = async (req, res) => {
 
 export const deleteTrain = async (req, res) => {
   if (!req.session.user) return res.redirect("/admin/login");
-
   try {
     const { trainId } = req.params;
     const deleteTrain = await Train.findByIdAndDelete(trainId);

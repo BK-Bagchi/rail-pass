@@ -37,7 +37,21 @@
                         <td><%= train.route.endingStation %></td>
                         <td><%= train.route.departureTime %></td>
                         <td><%= train.route.arrivalTime %></td>
-                        <td><%= train.route.betweenStations %></td>
+                        <td>
+                            <ul class="list-unstyled mb-0">
+                              <% if (train.route && Array.isArray(train.route.betweenStations)) { %>
+  <% train.route.betweenStations.forEach(station => { %>
+    <li>
+      <strong><%= station?.stationName || "N/A" %></strong>
+      (Arrival: <%= station?.arrivalTime || "N/A" %>, Departure: <%= station?.departureTime || "N/A" %>)
+    </li>
+  <% }) %>
+<% } else { %>
+  <li>No stations in between</li>
+<% } %>
+
+                            </ul>
+                        </td>
                         <td>
                             <ul class="list-unstyled mb-0">
                                 <li>AC_Sleeper: <%= train.seats.AC_Sleeper %></li>
@@ -121,45 +135,71 @@
           </div>
 
           <!-- Between Stations (dynamic fields) -->
-            <div class="mb-3">
-                <label class="form-label">Stations in Between</label>
-                <div id="stationsContainer">
-                    <!-- Initial input field -->
-                    <div class="input-group mb-2">
-                        <input type="text" class="form-control" name="betweenStations" placeholder="Enter station name">
-                        <button class="btn btn-danger remove-station-btn" type="button">&times;</button>
-                    </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Stations in Between</label>
+            <div id="stationsContainer">
+              <!-- Initial input group -->
+              <div class="row g-2 mb-2 station-group">
+                <div class="col-md-4">
+                  <label class="form-label fw-bold">Station Name</label>
+                  <input type="text" class="form-control" name="betweenStations[0][stationName]" placeholder="Station name" required>
                 </div>
-                <button type="button" class="btn btn-sm btn-primary" id="addStationBtn">Add Station</button>
+                <div class="col-md-3">
+                  <label class="form-label fw-bold">Arrival Time</label>
+                  <input type="time" class="form-control" name="betweenStations[0][arrivalTime]" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label fw-bold">Departure Time</label>
+                  <input type="time" class="form-control" name="betweenStations[0][departureTime]" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button class="btn btn-danger remove-station-btn w-100" type="button">&times;</button>
+                </div>
+              </div>
             </div>
+            <button type="button" class="btn btn-sm btn-primary" id="addStationBtn">Add Station</button>
+          </div>
 
-            <script>
-                const stationsContainer = document.getElementById('stationsContainer');
-                const addStationBtn = document.getElementById('addStationBtn');
+          <script>
+            let stationIndex = 1; // Track index for naming inputs
 
-                addStationBtn.addEventListener('click', () => {
-                    // Create new input group
-                    const div = document.createElement('div');
-                    div.classList.add('input-group', 'mb-2');
-                    div.innerHTML = `
-                        <input type="text" class="form-control" name="betweenStations" placeholder="Enter station name">
-                        <button class="btn btn-danger remove-station-btn" type="button">&times;</button>
-                    `;
-                    stationsContainer.appendChild(div);
+            const stationsContainer = document.getElementById("stationsContainer");
+            const addStationBtn = document.getElementById("addStationBtn");
 
-                    // Add event listener to remove button
-                    div.querySelector('.remove-station-btn').addEventListener('click', () => {
-                        div.remove();
-                    });
-                });
+            addStationBtn.addEventListener("click", () => {
+              const row = document.createElement("div");
+              row.classList.add("row", "g-2", "mb-2", "station-group");
 
-                // Remove initial input if remove button clicked
-                document.querySelectorAll('.remove-station-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.target.parentElement.remove();
-                    });
-                });
-            </script>
+              row.innerHTML = `
+                <div class="col-md-4">
+                  <label class="form-label fw-bold">Station Name</label>
+                  <input type="text" class="form-control" name="betweenStations[${stationIndex}][stationName]" placeholder="Station name" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label fw-bold">Arrival Time</label>
+                  <input type="time" class="form-control" name="betweenStations[${stationIndex}][arrivalTime]" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label fw-bold">Departure Time</label>
+                  <input type="time" class="form-control" name="betweenStations[${stationIndex}][departureTime]" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button class="btn btn-danger remove-station-btn w-100" type="button">&times;</button>
+                </div>
+              `;
+
+              stationsContainer.appendChild(row);
+              stationIndex++;
+            });
+
+            // Remove station row
+            document.addEventListener("click", function (e) {
+              if (e.target && e.target.classList.contains("remove-station-btn")) {
+                e.target.closest(".station-group").remove();
+              }
+            });
+          </script>
+
           <!-- Between Stations (dynamic fields) -->
 
 
@@ -186,7 +226,7 @@
 </div>
 
 <!-- Edit Train Modal -->
- <div class="modal fade" id="editTrainModal" tabindex="-1" aria-labelledby="editTrainModalLabel" aria-hidden="true">
+<div class="modal fade" id="editTrainModal" tabindex="-1" aria-labelledby="editTrainModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form id="editTrainForm" action="" method="POST">
@@ -243,6 +283,11 @@
             <% }) %>
           </div>
 
+          <!-- Between Stations -->
+          <h6 class="mb-2">Stations In Between</h6>
+          <div id="editStationsContainer"></div>
+          <button type="button" class="btn btn-sm btn-primary mb-3" id="addEditStationBtn">Add Station</button>
+
         </div>
 
         <div class="modal-footer">
@@ -253,29 +298,77 @@
     </div>
   </div>
 </div>
+
 <script>
-const trains = <%- JSON.stringify(trains) %>; // Pass all trains from server
+  const trains = <%- JSON.stringify(trains) %>; // Pass all trains from server
+  let editStationIndex = 0;
 
-const editTrainModal = document.getElementById('editTrainModal');
-editTrainModal.addEventListener('show.bs.modal', function(event) {
-    const button = event.relatedTarget;
-    const trainId = button.getAttribute('data-id');
+  const editTrainModal = document.getElementById('editTrainModal');
+  const editStationsContainer = document.getElementById('editStationsContainer');
 
-    const train = trains.find(t => t._id === trainId);
-    if (!train) return;
+  editTrainModal.addEventListener('show.bs.modal', function(event) {
+      const button = event.relatedTarget;
+      const trainId = button.getAttribute('data-id');
 
-    document.getElementById('editTrainForm').action = `/admin/trains/editTrain/${train._id}`;
-    document.getElementById('editTrainId').value = train._id;
-    document.getElementById('editTrainNumber').value = train.trainNumber;
-    document.getElementById('editTrainName').value = train.trainName;
-    document.getElementById('editStartingStation').value = train.route.startingStation || '';
-    document.getElementById('editEndingStation').value = train.route.endingStation || '';
-    document.getElementById('editDepartureTime').value = train.route.departureTime || '';
-    document.getElementById('editArrivalTime').value = train.route.arrivalTime || '';
+      const train = trains.find(t => t._id === trainId);
+      if (!train) return;
 
-    Object.keys(train.seats).forEach(type => {
-        const seatInput = document.getElementById('editSeat' + type);
-        if (seatInput) seatInput.value = train.seats[type];
-    });
-});
+      document.getElementById('editTrainForm').action = `/admin/trains/editTrain/${train._id}`;
+      document.getElementById('editTrainId').value = train._id;
+      document.getElementById('editTrainNumber').value = train.trainNumber;
+      document.getElementById('editTrainName').value = train.trainName;
+      document.getElementById('editStartingStation').value = train.route.startingStation || '';
+      document.getElementById('editEndingStation').value = train.route.endingStation || '';
+      document.getElementById('editDepartureTime').value = train.route.departureTime || '';
+      document.getElementById('editArrivalTime').value = train.route.arrivalTime || '';
+
+      Object.keys(train.seats).forEach(type => {
+          const seatInput = document.getElementById('editSeat' + type);
+          if (seatInput) seatInput.value = train.seats[type];
+      });
+
+      // Populate Between Stations
+      editStationsContainer.innerHTML = '';
+      editStationIndex = 0;
+      if (train.route.betweenStations && train.route.betweenStations.length > 0) {
+          train.route.betweenStations.forEach(st => addEditStationRow(st));
+      }
+  });
+
+  // Add Between Station Row
+  function addEditStationRow(station = {}) {
+      const row = document.createElement('div');
+      row.classList.add('row', 'g-2', 'mb-2', 'station-group');
+
+      row.innerHTML = `
+          <div class="col-md-4">
+              <label class="form-label">Station Name</label>
+              <input type="text" class="form-control" name="betweenStations[${editStationIndex}][stationName]" value="${station.stationName || ''}" required>
+          </div>
+          <div class="col-md-3">
+              <label class="form-label">Arrival Time</label>
+              <input type="time" class="form-control" name="betweenStations[${editStationIndex}][arrivalTime]" value="${station.arrivalTime || ''}" required>
+          </div>
+          <div class="col-md-3">
+              <label class="form-label">Departure Time</label>
+              <input type="time" class="form-control" name="betweenStations[${editStationIndex}][departureTime]" value="${station.departureTime || ''}" required>
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+              <button type="button" class="btn btn-danger w-100 remove-station-btn">&times;</button>
+          </div>
+      `;
+      editStationsContainer.appendChild(row);
+      editStationIndex++;
+  }
+
+  // Add new station
+  document.getElementById('addEditStationBtn').addEventListener('click', () => addEditStationRow());
+
+  // Remove station
+  document.addEventListener('click', function(e) {
+      if (e.target && e.target.classList.contains('remove-station-btn')) {
+          e.target.closest('.station-group').remove();
+      }
+  });
 </script>
+
