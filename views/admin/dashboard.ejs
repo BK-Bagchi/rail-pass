@@ -46,6 +46,11 @@
                                 <i class="bi bi-signpost-2 fs-5 me-2"></i> Stations
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="/admin/fares">
+                                <i class="bi bi-cash-stack fs-5 me-2"></i> Fare
+                            </a>
+                        </li>
                         <li class="nav-item mt-3">
                             <a class="btn btn-danger w-100" href="/auth/logout">
                                 <i class="bi bi-box-arrow-right fs-5 me-2"></i> Logout
@@ -80,7 +85,12 @@
                     stations: stations,
                     stationFound: stationFound
                 }) %>
-            <% }%>
+            <% } else if (management === "fares"){%>
+                <%- include("fares.ejs", { 
+                    management:management,
+                    fares: fares
+                }) %>
+            <% } %>
         </div>
     </div>
     <%- include("../partials/footer.ejs") %>

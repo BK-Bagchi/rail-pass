@@ -89,4 +89,19 @@ adminRouter.post("/stations/editStation/:stationId", updateStation);
 // Admin Delete Station
 adminRouter.get("/stations/deleteStation/:stationId", deleteStation);
 
+// Admin Fare Management (Placeholder for future implementation)
+adminRouter.get("/fares", (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
+  const fares = {
+    AC_Sleeper: 1500,
+    AC_Chair: 1000,
+    AC_Seat: 800,
+    First_Sleeper: 600,
+    First_Chair: 500,
+    First_Seat: 400,
+    General: 200,
+  };
+  res.render("admin/dashboard", { management: "fares", fares: fares });
+});
+
 export default adminRouter;

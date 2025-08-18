@@ -1,0 +1,56 @@
+<!-- Fare Management Content -->
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+    <h2 class="mb-4">Fare Management</h2>
+
+    <!-- Add Fare Button -->
+    <div class="mb-3">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addFareModal">
+            <i class="bi bi-cash-stack me-2"></i> Add Fare
+        </button>
+    </div>
+
+    <% if (!fares || Object.keys(fares).length === 0) { %>
+        <div class="alert alert-warning text-center">No fares found!</div>
+    <% } else { %>
+    <!-- Fares Table -->
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Seat Type</th>
+                    <th scope="col">Fare (৳)</th>
+                    <th scope="col" class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% Object.keys(fares).forEach((type, index) => { %>
+                    <tr>
+                        <th scope="row"><%= index + 1 %></th>
+                        <td><%= type.replace("_", " ") %></td>
+                        <td>৳ <%= fares[type] %></td>
+                        <td class="text-center">
+                            <!-- Edit Button -->
+                            <button 
+                                class="btn btn-sm btn-warning" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#editFareModal"
+                                onclick='openEditFareModal("<%= type %>", <%= fares[type] %>)'>
+                                Edit
+                            </button>
+
+                            <!-- Delete Button -->
+                            <a 
+                                href="/admin/fares/delete/<%= type %>" 
+                                class="btn btn-sm btn-danger" 
+                                onclick="return confirm('Are you sure you want to delete this fare?')">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <% } %>
+</main>
