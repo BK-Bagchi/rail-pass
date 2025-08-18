@@ -67,9 +67,24 @@ export const addNewTrain = async (req, res) => {
         },
       }));
 
-    // Insert all stations at once
+    // Insert all stations at once which station names are not already in the database
+    // This prevents duplicate station entries
     if (stationsToInsert.length > 0) {
-      await Station.insertMany(stationsToInsert);
+      // Get names of existing stations
+      const existingStationNames = await Station.find(
+        { stationName: { $in: stationsToInsert.map((s) => s.stationName) } },
+        { stationName: 1, _id: 0 }
+      ).lean();
+
+      const existingNamesSet = new Set(
+        existingStationNames.map((s) => s.stationName)
+      );
+      const newStations = stationsToInsert.filter(
+        (s) => !existingNamesSet.has(s.stationName)
+      );
+      if (newStations.length > 0) {
+        await Station.insertMany(newStations);
+      }
     }
 
     // Create new train
