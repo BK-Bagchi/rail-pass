@@ -1,4 +1,4 @@
-<form action="" method="POST" class="p-4 shadow rounded bg-light" style="max-width: 500px; margin: auto;">
+<form action="/booking/checkTrainList" method="POST" class="p-4 shadow rounded bg-light" style="max-width: 500px; margin: auto;">
   <h3 class="mb-4 text-center">Book Your Ticket</h3>
 
   <!-- From Station -->
@@ -33,15 +33,15 @@
   </div>
 
   <div class="d-grid">
-    <button type="submit" class="btn btn-primary w-100" onclick="logData()">Book Now</button>
-    <% if(!notLogin) {%>
+    <button type="submit" class="btn btn-primary w-100">Book Now</button>
+    <% if(!login) {%>
       <br>
       <p class="text-danger text-center"><a href="/auth/login"> Login to Book Ticket</a></p>
     <% } %>
   </div>
 </form>
 
-<!-- Station Modal -->
+<!-- Search Station Modal -->
 <div class="modal fade" id="stationModal" tabindex="-1" aria-labelledby="stationModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
@@ -51,13 +51,9 @@
       </div>
       <div class="modal-body">
         <input type="text" class="form-control mb-3" id="stationSearch" placeholder="Search station...">
-        <ul class="list-group" id="stationList" style="max-height: 300px; overflow-y: auto;">
-          <li class="list-group-item station-item">Dhaka</li>
-          <li class="list-group-item station-item">Chattogram</li>
-          <li class="list-group-item station-item">Sylhet</li>
-          <li class="list-group-item station-item">Rajshahi</li>
-          <li class="list-group-item station-item">Khulna</li>
-        </ul>
+
+        <!-- Station List (empty at start) -->
+        <ul class="list-group" id="stationList" style="max-height: 300px; overflow-y: auto;"></ul>
       </div>
     </div>
   </div>
@@ -65,43 +61,44 @@
 
 
 <script>
+  const stations = <%- JSON.stringify(stations) %>; // Pass all stations from backend
   let activeField = null;
-  // Track which input (fromStation or toStation) is active
+
+  // Track active input (from / to)
   function setActiveField(fieldId) {
     activeField = fieldId;
   }
 
-  // Search filter
+  // Search & populate results
   document.getElementById("stationSearch").addEventListener("input", function () {
-    let filter = this.value.toLowerCase();
-    document.querySelectorAll("#stationList .station-item").forEach(item => {
-      item.style.display = item.textContent.toLowerCase().includes(filter) ? "" : "none";
-    });
+    let query = this.value.toLowerCase();
+    let list = document.getElementById("stationList");
+    list.innerHTML = ""; // Clear old results
+
+    if (query.length === 0) return; // Don't show anything until typing starts
+
+    let filtered = stations.filter(st => st.stationName.toLowerCase().includes(query));
+
+    if (filtered.length === 0) {
+      list.innerHTML = `<li class="list-group-item text-muted">No station found</li>`;
+    } else {
+      filtered.forEach(st => {
+        let li = document.createElement("li");
+        li.className = "list-group-item station-item";
+        li.textContent = st.stationName;
+
+        li.addEventListener("click", function () {
+          if (activeField) {
+            document.getElementById(activeField).value = st.stationName;
+          }
+          let modal = bootstrap.Modal.getInstance(document.getElementById("stationModal"));
+          modal.hide();
+        });
+
+        list.appendChild(li);
+      });
+    }
   });
-
-  // Click on station -> insert into active field
-  document.querySelectorAll("#stationList .station-item").forEach(item => {
-    item.addEventListener("click", function () {
-      if (activeField) {
-        document.getElementById(activeField).value = this.textContent;
-      }
-      // Close modal after selection
-      var modal = bootstrap.Modal.getInstance(document.getElementById("stationModal"));
-      modal.hide();
-    });
-  });
-
-  const logData = () => {
-    const fromStation = document.getElementById("fromStation").value;
-    const toStation = document.getElementById("toStation").value;
-    const seatClass = document.getElementById("seatClass").value;
-    const journeyDate = document.getElementById("journeyDate").value;
-
-    console.log("From Station:", fromStation);
-    console.log("To Station:", toStation);
-    console.log("Seat Class:", seatClass);
-    console.log("Journey Date:", journeyDate);
-  };
 </script>
 
 

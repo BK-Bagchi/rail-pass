@@ -1,12 +1,9 @@
 import express from "express";
-import { createBooking } from "../controllers/booking.controller.js";
+import { searchForTrain } from "../controllers/booking.controller.js";
+import Station from "../models/station.model.js";
 
 const bookingRouter = express.Router();
 
-//✔ Booking Home Page
-bookingRouter.get("/", (req, res) => {
-  res.render("index", { notLogin: req.session.user });
-});
-//✔ Create Booking
-bookingRouter.post("/", createBooking);
+//✔ Booking Home Page. Search for Train
+bookingRouter.get("/", searchForTrain);
 export default bookingRouter;

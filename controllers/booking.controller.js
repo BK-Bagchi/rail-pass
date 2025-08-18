@@ -1,19 +1,17 @@
-import Booking from "../models/booking.model.js";
+import Station from "../models/station.model.js";
 
-export const createBooking = async (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
+export const searchForTrain = async (req, res) => {
   try {
-    if (!req.session)
+    const allStations = await Station.find();
+    if (!allStations)
       return res
-        .status(401)
-        .render("index", { notLogin: "Unauthorized. Please login." });
+        .status(404)
+        .render("index", { login: req.session.user, stations: null });
 
-    console.log(req.body);
-    // const bookingData = req.body;
-    // bookingData.user = req.session.userId; // Assuming userId is stored in session
-    // const newBooking = await Booking.create(bookingData);
-    // res.status(201).json(newBooking);
+    res.render("index", { login: req.session.user, stations: allStations });
   } catch (error) {
-    res.status(500).json({ message: error.message || "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ message: error.message || "Internal Server Error" });
   }
 };

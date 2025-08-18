@@ -11,7 +11,10 @@
   <body>
     <%- include('partials/navbar') %>
     <div class="container mt-5">
-      <%- include('booking/form', {notLogin: notLogin}) %>
+      <%- include('booking/form', {
+        login: login,
+        stations: stations
+      }) %>
     </div>
     <%- include('partials/footer.ejs') %>
   </body>
