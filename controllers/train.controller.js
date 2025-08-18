@@ -60,7 +60,7 @@ export const addNewTrain = async (req, res) => {
         endingStation,
         arrivalTime,
         departureTime,
-        betweenStations,
+        betweenStations: filteredStations,
       },
       seats: {
         AC_Sleeper: Number(AC_Sleeper),
@@ -110,6 +110,13 @@ export const updateTrain = async (req, res) => {
         }
       }
     });
+
+    // Remove any empty objects that might remain
+    const filteredStations = betweenStations.filter(
+      (station) => Object.keys(station).length > 0
+    );
+
+    // Update train with new data
     const updatedData = await Train.findByIdAndUpdate(
       trainId,
       {
@@ -120,7 +127,7 @@ export const updateTrain = async (req, res) => {
           endingStation,
           arrivalTime,
           departureTime,
-          betweenStations,
+          betweenStations: filteredStations,
         },
         seats: {
           AC_Sleeper: Number(AC_Sleeper),

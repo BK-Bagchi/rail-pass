@@ -4,7 +4,6 @@ export const getAllStation = async (req, res) => {
   if (!req.session.user) return res.redirect("/admin/login");
   try {
     const allStations = await Station.find();
-    console.log(allStations);
     if (!allStations || allStations.length === 0) {
       return res.status(404).render("admin/dashboard", {
         stations: null,
