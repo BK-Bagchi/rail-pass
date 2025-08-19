@@ -14,8 +14,9 @@ bookingRouter.post("/checkTrainList", checkTrainList);
 //✔ Select Seat by Type
 bookingRouter.get("/selectSeat/:trainId", async (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
-  res.send(
-    `Select Seat by Type for ${req.params.trainId} and Seat: ${req.query.seatType} `
-  );
+  res.render("booking/selectSeat", {
+    trainId: req.params.trainId,
+    seatType: req.query.seatType,
+  });
 });
 export default bookingRouter;
