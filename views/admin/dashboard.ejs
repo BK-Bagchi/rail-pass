@@ -88,6 +88,7 @@
             <% } else if (management === "fares"){%>
                 <%- include("fares.ejs", { 
                     management:management,
+                    trains: trains,
                     fares: fares
                 }) %>
             <% } %>

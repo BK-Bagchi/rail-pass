@@ -1,7 +1,6 @@
 <!-- Fare Management Content -->
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
     <h2 class="mb-4">Fare Management</h2>
-
     <!-- Add Fare Button -->
     <div class="mb-3">
         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addFareModal">
@@ -10,7 +9,7 @@
     </div>
 
     <% if (!fares || Object.keys(fares).length === 0) { %>
-        <div class="alert alert-warning text-center">No fares found!</div>
+        <div class="alert alert-warning text-center">No fares found! Insert First</div>
     <% } else { %>
     <!-- Fares Table -->
     <div class="table-responsive shadow-sm rounded">
@@ -38,7 +37,6 @@
                                 onclick='openEditFareModal("<%= type %>", <%= fares[type] %>)'>
                                 Edit
                             </button>
-
                             <!-- Delete Button -->
                             <a 
                                 href="/admin/fares/delete/<%= type %>" 
@@ -54,3 +52,75 @@
     </div>
     <% } %>
 </main>
+
+<!-- Add Fare Modal -->
+<div class="modal fade" id="addFareModal" tabindex="-1" aria-labelledby="addFareModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <!-- Modal Header -->
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="addFareModalLabel">
+          <i class="bi bi-cash-stack me-2"></i> Add Train Fare
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form action="/fares/addFare" method="POST">
+            <!-- Train Selection -->
+            <div class="mb-3">
+                <label for="trainName" class="form-label fw-bold">Select Train</label>
+                <select class="form-select" name="trainId" id="trainName" required>
+                <% trains.forEach(train => { %>
+                    <option value="<%= train._id %>"><%= train.trainName %></option>
+                <% }) %>
+                </select>
+            </div>
+
+            <!-- Fare Fields -->
+            <div class="row g-3 mt-3">
+            <div class="col-12">
+                <h4 class="fw-bold text-center mb-4">
+                <i class="bi bi-cash-stack me-2 text-success"></i> Fare Per Kilometer
+                </h4>
+            </div>
+            <% if (trains.length > 0) { %>
+                <% const seatTypes = Object.keys(trains[0].seats || {}); %>
+                <% seatTypes.forEach(seatType => { %>
+                    <div class="col-md-4">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-body">
+                                <label class="form-label fw-semibold">
+                                    <%= seatType.replace(/_/g, " ") %>
+                                </label>
+                                <input 
+                                    type="number" 
+                                    class="form-control" 
+                                    name="fareDetails[<%= seatType %>]" 
+                                    placeholder="Enter fare per km" 
+                                    required
+                                >
+                                </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p class="text-muted text-center">No seat types available.</p>
+            <% } %>
+            </div>
+
+
+            <!-- Modal Footer -->
+            <div class="modal-footer mt-4">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle me-1"></i> Save Fare
+                </button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -14,6 +14,9 @@ import {
 } from "../controllers/station.controller.js";
 import User from "../models/user.model.js";
 import { getAllUser, updateUser } from "../controllers/user.controller.js";
+import Train from "../models/train.model.js";
+import Fare from "../models/fare.model.js";
+import { showAllFare } from "../controllers/fare.controller.js";
 
 const adminRouter = express.Router();
 //✔ Admin Login Page
@@ -89,19 +92,7 @@ adminRouter.post("/stations/editStation/:stationId", updateStation);
 // Admin Delete Station
 adminRouter.get("/stations/deleteStation/:stationId", deleteStation);
 
-// Admin Fare Management (Placeholder for future implementation)
-adminRouter.get("/fares", (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
-  const fares = {
-    AC_Sleeper: 1500,
-    AC_Chair: 1000,
-    AC_Seat: 800,
-    First_Sleeper: 600,
-    First_Chair: 500,
-    First_Seat: 400,
-    General: 200,
-  };
-  res.render("admin/dashboard", { management: "fares", fares: fares });
-});
+// Admin Fare Management -------------------------------------
+adminRouter.get("/fares", showAllFare);
 
 export default adminRouter;
