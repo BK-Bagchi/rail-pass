@@ -2,6 +2,7 @@ import express from "express";
 import {
   showTrains,
   searchForTrain,
+  selectSeat,
 } from "../controllers/booking.controller.js";
 import Station from "../models/station.model.js";
 
@@ -12,18 +13,7 @@ bookingRouter.get("/", searchForTrain);
 //✔ Check Train List
 bookingRouter.post("/showTrains", showTrains);
 //✔ Select Seat by Type
-bookingRouter.post("/selectSeat/:trainId", async (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
-  console.log(req.body);
-  res.render("booking/selectSeat", {
-    trainId: req.params.trainId,
-    trainName: req.body.trainName,
-    seatClass: req.body.seatClass,
-    fromStation: req.body.fromStation,
-    toStation: req.body.toStation,
-    journeyDate: req.body.journeyDate,
-  });
-});
+bookingRouter.post("/selectSeat/:trainId", selectSeat);
 //✔ Confirm Booking
 bookingRouter.get("/confirmBooking", async (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");

@@ -1,3 +1,4 @@
+import e from "express";
 import Station from "../models/station.model.js";
 import Train from "../models/train.model.js";
 
@@ -72,4 +73,16 @@ export const showTrains = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message || "Internal Server Error" });
   }
+};
+
+export const selectSeat = async (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
+  res.render("booking/selectSeat", {
+    trainId: req.params.trainId,
+    trainName: req.body.trainName,
+    seatClass: req.body.seatClass,
+    fromStation: req.body.fromStation,
+    toStation: req.body.toStation,
+    journeyDate: req.body.journeyDate,
+  });
 };
