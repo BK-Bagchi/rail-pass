@@ -26,15 +26,6 @@ const trainSchema = new mongoose.Schema(
       First_Seat: { type: Number }, // First Cabin
       General: { type: Number },
     },
-    fare: {
-      AC_Sleeper: { type: Number, default: 0 },
-      AC_Chair: { type: Number, default: 0 },
-      AC_Seat: { type: Number, default: 0 }, // AC Cabin
-      First_Sleeper: { type: Number, default: 0 },
-      First_Chair: { type: Number, default: 0 },
-      First_Seat: { type: Number, default: 0 }, // First Cabin
-      General: { type: Number, default: 0 },
-    },
   },
   { timestamps: true }
 );
