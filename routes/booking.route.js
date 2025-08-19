@@ -16,7 +16,11 @@ bookingRouter.get("/selectSeat/:trainId", async (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
   res.render("booking/selectSeat", {
     trainId: req.params.trainId,
-    seatType: req.query.seatType,
+    trainName: req.query.train,
+    seatClass: req.query.seatClass,
+    fromStation: req.query.from,
+    toStation: req.query.to,
+    journeyDate: req.query.journeyDate,
   });
 });
 //✔ Confirm Booking

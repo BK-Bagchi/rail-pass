@@ -23,7 +23,45 @@
 <body>
     <%- include('../partials/navbar.ejs') %>
     <div class="container py-4">
-        <h3 class="mb-4">Selecting Train <%= trainId %> for seat type <%= seatType %></h3>
+        <div class="bg-light rounded-4 shadow-sm p-4 mb-5 border-5 border-primary">
+            <h4 class="fw-bold mb-3 text-center text-primary">
+                <i class="bi bi-train-front-fill me-2"></i>
+                <%= trainName %>
+            </h4>
+            <div class="d-flex flex-wrap justify-content-center gap-3 text-center">
+                <!-- Seat Type -->
+                <div class="p-3 rounded-3 shadow-sm bg-white" style="min-width: 120px;">
+                    <i class="bi bi-person-fill fs-4 text-primary"></i>
+                    <div class="fw-semibold mt-1"><%= seatClass.replace("_", " ") %></div>
+                    <small class="text-muted">Seat Type</small>
+                </div>
+                <!-- From Station -->
+                <div class="p-3 rounded-3 shadow-sm bg-white" style="min-width: 120px;">
+                    <i class="bi bi-geo-alt-fill fs-4 text-success"></i>
+                    <div class="fw-semibold mt-1"><%= fromStation %></div>
+                    <small class="text-muted">From</small>
+                </div>
+                <!-- To Station -->
+                <div class="p-3 rounded-3 shadow-sm bg-white" style="min-width: 120px;">
+                    <i class="bi bi-geo-fill fs-4 text-danger"></i>
+                    <div class="fw-semibold mt-1"><%= toStation %></div>
+                    <small class="text-muted">To</small>
+                </div>
+                <!-- Journey Date -->
+                <div class="p-3 rounded-3 shadow-sm bg-white" style="min-width: 160px;">
+                    <i class="bi bi-calendar-event fs-4 text-warning"></i>
+                    <div class="fw-semibold mt-1">
+                        <%= new Date(journeyDate).toLocaleDateString('en-US', {
+                                weekday: 'long',
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric'
+                            }) %>
+                    </div>
+                    <small class="text-muted">Journey Date</small>
+                </div>
+            </div>
+        </div>
         <!-- Coach Tabs -->
         <div class="d-flex justify-content-center mb-4 flex-wrap gap-2">
             <% ["A", "B", "C", "D"].forEach((coach, index) => { %>

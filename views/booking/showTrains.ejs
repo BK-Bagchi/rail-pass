@@ -67,14 +67,10 @@
                     <div class="row g-2">
                         <% Object.keys(train.seats).forEach(type => { %>
                             <div class="col-md-3 col-6">
-                            <a href="/booking/selectSeat/<%= train._id %>?seatType=<%= type %>" 
-                                class="text-decoration-none">
-                                <div class="border rounded-3 text-center p-2 shadow-sm 
-                                            <%= train.seats[type] > 0 ? 'bg-white' : 'bg-light text-muted' %>">
-                                
+                                <a href="/booking/selectSeat/<%= train._id %>?train=<%= train.trainName%>&from=<%= fromStation %>&to=<%= toStation %>&seatClass=<%= type %>&journeyDate=<%= journeyDate %>" class="text-decoration-none">
+                                <div class="border rounded-3 text-center p-2 shadow-sm  <%= train.seats[type] > 0 ? 'bg-white' : 'bg-light text-muted' %>">
                                 <!-- Seat Type -->
                                 <span class="fw-bold d-block"><%= type.replace("_", " ") %></span>
-                                
                                 <!-- Availability -->
                                 <% if (train.seats[type] > 0) { %>
                                     <span class="badge bg-success d-block mb-1"><%= train.seats[type] %> Seats</span>
