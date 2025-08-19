@@ -130,11 +130,19 @@
             </div>
         <% }) %>
         <div class="text-center mb-5">
-            <a href="/booking/confirmBooking" 
-            id="confirmBooking" 
-            class="btn btn-lg btn-success px-4 shadow-sm text-decoration-none">
-                <i class="bi bi-check-circle me-2"></i> Confirm Booking
-            </a>
+            <form id="confirmBookingForm" action="/booking/confirmBooking" method="POST">
+                <input type="hidden" name="trainId" value="<%= trainId %>">
+                <input type="hidden" name="trainName" value="<%= trainName %>">
+                <input type="hidden" name="seatClass" value="<%= seatClass %>">
+                <input type="hidden" name="fromStation" value="<%= fromStation %>">
+                <input type="hidden" name="toStation" value="<%= toStation %>">
+                <input type="hidden" name="journeyDate" value="<%= journeyDate %>">
+                <input type="hidden" name="totalSeats" id="totalSeats">
+                <input type="hidden" name="selectedSeats" id="selectedSeats">
+                <button type="submit" id="confirmBooking" class="btn btn-lg btn-success px-4">
+                    Confirm Booking
+                </button>
+            </form>
         </div>
     </div>
     <%- include('../partials/footer.ejs') %>
@@ -181,10 +189,23 @@
                 }
             });
         });
+        
         // Confirm button click
-        document.getElementById("confirmBooking").addEventListener("click", () => {
-            console.log("Total Selected Seats:", selectedSeats.size);
-            console.log("Selected Seats:", Array.from(selectedSeats));
+        document.getElementById("confirmBooking").addEventListener("click", (e) => {
+            e.preventDefault(); // prevent default form submission
+
+            const form = document.getElementById("confirmBookingForm");
+            document.getElementById("totalSeats").value = selectedSeats.size;
+            const oldInputs = form.querySelectorAll('input[name="selectedSeats"]');
+            oldInputs.forEach(input => input.remove());
+            Array.from(selectedSeats).forEach(seat => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "selectedSeats";
+                input.value = seat;
+                form.appendChild(input);
+            });
+            form.submit();
         });
     </script>
 </body>

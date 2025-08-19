@@ -10,7 +10,82 @@
 </head>
 <body>
     <%- include('../partials/navbar.ejs') %>
-    <p>Booking Confirmed</p>
+    <main class="container py-5">
+        <div class="card shadow-sm border-0 rounded-4 mx-auto" style="max-width: 600px;">
+            <div class="card-header bg-success text-white text-center fw-bold fs-4">
+                Booking Confirmed!
+            </div>
+            <div class="card-body">
+                <p class="text-center mb-4">
+                    Your train ticket has been successfully booked.
+                </p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">
+                        <strong>Train Name:</strong> <%= trainName %>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Seat Class:</strong> <%= seatClass.replace("_", " ") %>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>From:</strong> <%= fromStation %> 
+                        <strong>Departure:</strong> {Time} 
+                    </li>
+                    <li class="list-group-item">
+                        <strong>To:</strong> <%= toStation %>
+                        <strong>Arrival:</strong> {Time} 
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Journey Date:</strong> 
+                        <span class="badge bg-primary px-3 py-2"><%= new Date(journeyDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Confirmation Date:</strong> 
+                        <span class="badge bg-success px-3 py-2">
+                            <%= new Date().toLocaleDateString('en-GB', { 
+                                weekday: 'short', 
+                                day: 'numeric', 
+                                month: 'short', 
+                                year: 'numeric' 
+                            }) %>
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Total Seats Booked:</strong> <%= totalSeats %>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Selected Seats:</strong> <%= selectedSeats.join(", ") %>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Total Fare:</strong> 1500 BDT
+                    </li>
+                </ul>
+                <div class="text-center mt-4">
+                    <a href="#" class="btn btn-primary btn-lg px-4 me-2" id="paymentBtn">
+                        Proceed to Payment (<span id="paymentTimer"></span>s)
+                    </a>
+                    <a href="/" class="btn btn-outline-secondary btn-lg px-4">
+                        Cancel Booking
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
     <%- include('../partials/footer.ejs') %>
+
+    <script>
+        // let timeLeft = 15; // seconds
+        // const timerSpan = document.getElementById("paymentTimer");
+
+        // const countdown = setInterval(() => {
+        //     timeLeft--;
+        //     timerSpan.textContent = timeLeft;
+
+        //     if (timeLeft <= 0) {
+        //         clearInterval(countdown);
+        //         window.location.href = "/"; // auto redirect after 15s
+        //     }
+        // }, 1000);
+    </script>
 </body>
+
 </html>

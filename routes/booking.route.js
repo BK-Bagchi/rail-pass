@@ -3,6 +3,7 @@ import {
   showTrains,
   searchForTrain,
   selectSeat,
+  confirmBooking,
 } from "../controllers/booking.controller.js";
 import Station from "../models/station.model.js";
 
@@ -15,8 +16,5 @@ bookingRouter.post("/showTrains", showTrains);
 //✔ Select Seat by Type
 bookingRouter.post("/selectSeat/:trainId", selectSeat);
 //✔ Confirm Booking
-bookingRouter.get("/confirmBooking", async (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
-  res.render("booking/confirmBooking");
-});
+bookingRouter.post("/confirmBooking", confirmBooking);
 export default bookingRouter;

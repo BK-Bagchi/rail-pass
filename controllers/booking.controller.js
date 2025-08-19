@@ -86,3 +86,17 @@ export const selectSeat = async (req, res) => {
     journeyDate: req.body.journeyDate,
   });
 };
+
+export const confirmBooking = async (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
+  try {
+    // prettier-ignore
+    const { trainId, trainName, seatClass, fromStation, toStation, journeyDate, totalSeats, selectedSeats } = req.body;
+    // prettier-ignore
+    res.render("booking/confirmBooking", { trainId, trainName, seatClass, fromStation, toStation, journeyDate, totalSeats, selectedSeats,});
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: error.message || "Internal Server Error" });
+  }
+};
