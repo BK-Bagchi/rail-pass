@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  checkTrainList,
+  showTrains,
   searchForTrain,
 } from "../controllers/booking.controller.js";
 import Station from "../models/station.model.js";
@@ -10,7 +10,7 @@ const bookingRouter = express.Router();
 //✔ Booking Home Page. Search for Train
 bookingRouter.get("/", searchForTrain);
 //✔ Check Train List
-bookingRouter.post("/checkTrainList", checkTrainList);
+bookingRouter.post("/showTrains", showTrains);
 //✔ Select Seat by Type
 bookingRouter.get("/selectSeat/:trainId", async (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");

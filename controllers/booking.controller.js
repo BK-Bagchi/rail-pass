@@ -17,7 +17,7 @@ export const searchForTrain = async (req, res) => {
   }
 };
 
-export const checkTrainList = async (req, res) => {
+export const showTrains = async (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
   try {
     //Define fares for each seat class
