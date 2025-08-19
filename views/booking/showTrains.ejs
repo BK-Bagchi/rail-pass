@@ -67,25 +67,35 @@
                     <div class="row g-2">
                         <% Object.keys(train.seats).forEach(type => { %>
                             <div class="col-md-3 col-6">
-                                <a href="/booking/selectSeat/<%= train._id %>?train=<%= train.trainName%>&from=<%= fromStation %>&to=<%= toStation %>&seatClass=<%= type %>&journeyDate=<%= journeyDate %>" class="text-decoration-none">
-                                <div class="border rounded-3 text-center p-2 shadow-sm  <%= train.seats[type] > 0 ? 'bg-white' : 'bg-light text-muted' %>">
-                                <!-- Seat Type -->
-                                <span class="fw-bold d-block"><%= type.replace("_", " ") %></span>
-                                <!-- Availability -->
-                                <% if (train.seats[type] > 0) { %>
-                                    <span class="badge bg-success d-block mb-1"><%= train.seats[type] %> Seats</span>
-                                <% } else { %>
-                                    <span class="badge bg-danger d-block mb-1">Full</span>
-                                <% } %>
-                                
-                                <!-- Fare -->
-                                <% if (fares && fares[type]) { %>
-                                    <small class="text-primary fw-semibold d-block">
-                                    Fare: ৳ <%= fares[type] %>
-                                    </small>
-                                <% } %>
-                                </div>
-                            </a>
+                                <form action="/booking/selectSeat/<%= train._id %>" method="POST">
+                                    <input type="hidden" name="trainName" value="<%= train.trainName %>">
+                                    <input type="hidden" name="fromStation" value="<%= fromStation %>">
+                                    <input type="hidden" name="toStation" value="<%= toStation %>">
+                                    <input type="hidden" name="seatClass" value="<%= type %>">
+                                    <input type="hidden" name="journeyDate" value="<%= journeyDate %>">
+
+                                    <button type="submit" class="border rounded-3 text-center p-2 shadow-sm w-100
+                                        <%= train.seats[type] > 0 ? 'bg-white' : 'bg-light text-muted' %>"
+                                        style="text-decoration: none;">
+                                        
+                                        <!-- Seat Type -->
+                                        <span class="fw-bold d-block"><%= type.replace("_", " ") %></span>
+
+                                        <!-- Availability -->
+                                        <% if (train.seats[type] > 0) { %>
+                                            <span class="badge bg-success d-block mb-1"><%= train.seats[type] %> Seats</span>
+                                        <% } else { %>
+                                            <span class="badge bg-danger d-block mb-1">Full</span>
+                                        <% } %>
+
+                                        <!-- Fare -->
+                                        <% if (fares && fares[type]) { %>
+                                            <small class="text-primary fw-semibold d-block">
+                                                Fare: ৳ <%= fares[type] %>
+                                            </small>
+                                        <% } %>
+                                    </button>
+                                </form>
                             </div>
                         <% }) %>
                     </div>

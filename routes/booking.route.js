@@ -12,15 +12,16 @@ bookingRouter.get("/", searchForTrain);
 //✔ Check Train List
 bookingRouter.post("/showTrains", showTrains);
 //✔ Select Seat by Type
-bookingRouter.get("/selectSeat/:trainId", async (req, res) => {
+bookingRouter.post("/selectSeat/:trainId", async (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
+  console.log(req.body);
   res.render("booking/selectSeat", {
     trainId: req.params.trainId,
-    trainName: req.query.train,
-    seatClass: req.query.seatClass,
-    fromStation: req.query.from,
-    toStation: req.query.to,
-    journeyDate: req.query.journeyDate,
+    trainName: req.body.trainName,
+    seatClass: req.body.seatClass,
+    fromStation: req.body.fromStation,
+    toStation: req.body.toStation,
+    journeyDate: req.body.journeyDate,
   });
 });
 //✔ Confirm Booking
