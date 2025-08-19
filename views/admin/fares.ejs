@@ -12,40 +12,56 @@
         <div class="alert alert-warning text-center">No fares found! Insert First</div>
     <% } else { %>
     <!-- Fares Table -->
+    <div class="mb-3">
+        <h4 class="fw-bold">Fare Per Kilometer</h4>
+    </div>
+
     <div class="table-responsive shadow-sm rounded">
-        <table class="table table-hover align-middle">
+        <table class="table table-bordered align-middle">
             <thead class="table-dark">
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Seat Type</th>
-                    <th scope="col">Fare (৳)</th>
-                    <th scope="col" class="text-center">Actions</th>
+                    <th>Train Name</th>
+                    <th>Train Number</th>
+                    <th>AC_Sleeper</th>
+                    <th>AC_Chair</th>
+                    <th>AC_Seat</th>
+                    <th>First_Sleeper</th>
+                    <th>First_Chair</th>
+                    <th>First_Seat</th>
+                    <th>General</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <% Object.keys(fares).forEach((type, index) => { %>
-                    <tr>
-                        <th scope="row"><%= index + 1 %></th>
-                        <td><%= type.replace("_", " ") %></td>
-                        <td>৳ <%= fares[type] %></td>
-                        <td class="text-center">
-                            <!-- Edit Button -->
-                            <button 
-                                class="btn btn-sm btn-warning" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#editFareModal"
-                                onclick='openEditFareModal("<%= type %>", <%= fares[type] %>)'>
-                                Edit
-                            </button>
-                            <!-- Delete Button -->
-                            <a 
-                                href="/admin/fares/delete/<%= type %>" 
-                                class="btn btn-sm btn-danger" 
-                                onclick="return confirm('Are you sure you want to delete this fare?')">
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
+                <% fares.forEach(fare => { %>
+                <tr>
+                    <td><%= fare.trainId?.trainName || "Unknown Train" %></td>
+                    <td><%= fare.trainId?.trainNumber || "Unknown Train" %></td>
+                    <td>৳ <%= fare.farePerKilometer.AC_Sleeper %></td>
+                    <td>৳ <%= fare.farePerKilometer.AC_Chair %></td>
+                    <td>৳ <%= fare.farePerKilometer.AC_Seat %></td>
+                    <td>৳ <%= fare.farePerKilometer.First_Sleeper %></td>
+                    <td>৳ <%= fare.farePerKilometer.First_Chair %></td>
+                    <td>৳ <%= fare.farePerKilometer.First_Seat %></td>
+                    <td>৳ <%= fare.farePerKilometer.General %></td>
+                    <td class="text-center">
+                        <!-- Update Button -->
+                        <button 
+                            class="btn btn-sm btn-warning mb-1" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#editFareModal"
+                            onclick='openEditFareModal("<%= fare._id %>")'>
+                            Update
+                        </button>
+                        <!-- Delete Button -->
+                        <a 
+                            href="/admin/fares/delete/<%= fare._id %>" 
+                            class="btn btn-sm btn-danger"
+                            onclick="return confirm('Are you sure you want to delete this fare?')">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
                 <% }) %>
             </tbody>
         </table>
@@ -123,4 +139,92 @@
     </div>
   </div>
 </div>
+
+<!-- Edit Fare Modal -->
+<div class="modal fade" id="editFareModal" tabindex="-1" aria-labelledby="editFareModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="editFareForm" action="" method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="editFareModalLabel">Update Fare</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <input type="hidden" name="fareId" id="editFareId">
+          <input type="hidden" name="trainId" id="editTrainId">
+
+          <!-- Selected Train Name -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Train</label>
+            <input type="text" class="form-control" id="editTrainName" readonly>
+          </div>
+
+          <!-- Fare Fields -->
+          <div class="row g-3" id="editFareFields">
+            <% if (trains.length > 0) { %>
+              <% const seatTypes = Object.keys(trains[0].seats || {}); %>
+              <% seatTypes.forEach(seatType => { %>
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold"><%= seatType.replace(/_/g, " ") %></label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    name="fareDetails[<%= seatType %>]" 
+                    id="editFare_<%= seatType %>" 
+                    placeholder="Enter fare" 
+                    required
+                  >
+                </div>
+              <% }) %>
+            <% } else { %>
+              <p class="text-muted">No seat types available.</p>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Fare</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    //Closes Update/Edit Modal
+    const editFareModal = new bootstrap.Modal(document.getElementById('editFareModal'));
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+        editFareModal.hide();
+    });
+  // Make fares available in JS
+    const fares = <%- JSON.stringify(fares) %>;
+
+    function openEditFareModal(fareId) {
+        // Find the fare object
+        const fare = fares.find(f => f._id === fareId);
+        if (!fare) return;
+
+        // Set form action
+        document.getElementById('editFareForm').action = `/admin/fares/edit/${fareId}`;
+        document.getElementById('editFareId').value = fareId;
+
+        // Set train name and ID
+        document.getElementById('editTrainId').value = fare.trainId?._id || "";
+        document.getElementById('editTrainName').value = `${fare.trainId?.trainName || "Unknown"} (${fare.trainId?.trainNumber || "N/A"})`;
+
+        // Populate fare fields dynamically
+        Object.keys(fare.farePerKilometer).forEach(type => {
+        const input = document.getElementById(`editFare_${type}`);
+        if (input) input.value = fare.farePerKilometer[type];
+        });
+
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('editFareModal'));
+        modal.show();
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 
