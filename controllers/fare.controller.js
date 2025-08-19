@@ -52,3 +52,42 @@ export const addNewFare = async (req, res) => {
     res.status(500).json({ message: error.message || "Internal Server Error" });
   }
 };
+
+export const updateFare = async (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
+  try {
+    //prettier-ignore
+    const updatedFare = await Fare.findByIdAndUpdate(
+      req.params.fareId,
+      {
+        farePerKilometer: {
+          AC_Sleeper: req.body.AC_Sleeper,
+          AC_Chair: req.body.AC_Chair,
+          AC_Seat: req.body.AC_Seat, // AC Cabin
+          First_Sleeper: req.body.First_Sleeper,
+          First_Chair: req.body.First_Chair,
+          First_Seat: req.body.First_Seat, // First Cabin
+          General: req.body.General,
+        },
+      },
+      { new: true }
+    );
+    if (updatedFare)
+      return res.redirect("/admin/fares?success=Fare updated successfully");
+    else return res.redirect("/admin/fares?error=Failed to update fare");
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Internal Server Error" });
+  }
+};
+
+export const deleteFare = async (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
+  try {
+    const deleteFare = await Fare.findByIdAndDelete(req.params.fareId);
+    if (deleteFare)
+      return res.redirect("/admin/fares?success=Fare delete successfully");
+    else return res.redirect("/admin/fares?error=Failed to delete fare");
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Internal Server Error" });
+  }
+};

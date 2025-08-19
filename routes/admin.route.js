@@ -16,7 +16,12 @@ import User from "../models/user.model.js";
 import { getAllUser, updateUser } from "../controllers/user.controller.js";
 import Train from "../models/train.model.js";
 import Fare from "../models/fare.model.js";
-import { addNewFare, showAllFare } from "../controllers/fare.controller.js";
+import {
+  addNewFare,
+  deleteFare,
+  showAllFare,
+  updateFare,
+} from "../controllers/fare.controller.js";
 
 const adminRouter = express.Router();
 //✔ Admin Login Page
@@ -96,5 +101,9 @@ adminRouter.get("/stations/deleteStation/:stationId", deleteStation);
 adminRouter.get("/fares", showAllFare);
 // Admin Add Fare
 adminRouter.post("/fares/addFare", addNewFare);
+// Admin Update Fare
+adminRouter.post("/fares/updateFare/:fareId", updateFare);
+// Admin Delete Fare
+adminRouter.get("/fares/deleteFare/:fareId", deleteFare);
 
 export default adminRouter;
