@@ -19,4 +19,9 @@ bookingRouter.get("/selectSeat/:trainId", async (req, res) => {
     seatType: req.query.seatType,
   });
 });
+//✔ Confirm Booking
+bookingRouter.get("/confirmBooking", async (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
+  res.render("booking/confirmBooking");
+});
 export default bookingRouter;

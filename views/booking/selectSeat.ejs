@@ -37,15 +37,15 @@
         <!-- Legend / Seat Status Indicator -->
         <div class="d-flex justify-content-center mb-4 gap-4">
             <div class="d-flex align-items-center">
-                <button class="btn btn-outline-success me-2 seat-btn" style="width:30px; height:30px;" disabled>BK</button>
+                <button class="btn btn-outline-success me-2 seat-btn" style="width:30px; height:30px;" disabled>RP</button>
                 <span>Ready to Book</span>
             </div>
             <div class="d-flex align-items-center">
-                <button class="btn btn-success me-2 seat-btn" style="width:30px; height:30px;" disabled>BK</button>
+                <button class="btn btn-success me-2 seat-btn" style="width:30px; height:30px;" disabled>RP</button>
                 <span>You're Booking</span>
             </div>
             <div class="d-flex align-items-center">
-                <button class="btn btn-danger me-2 seat-btn" style="width:30px; height:30px;" disabled>BK</button>
+                <button class="btn btn-danger me-2 seat-btn" style="width:30px; height:30px;" disabled>RP</button>
                 <span>Already Booked</span>
             </div>
         </div>
@@ -92,9 +92,11 @@
             </div>
         <% }) %>
         <div class="text-center mb-5">
-            <button id="confirmSelection" class="btn btn-lg btn-success px-4">
-                Confirm Selection
-            </button>
+            <a href="/booking/confirmBooking" 
+            id="confirmBooking" 
+            class="btn btn-lg btn-success px-4 shadow-sm text-decoration-none">
+                <i class="bi bi-check-circle me-2"></i> Confirm Booking
+            </a>
         </div>
     </div>
     <%- include('../partials/footer.ejs') %>
@@ -142,7 +144,7 @@
             });
         });
         // Confirm button click
-        document.getElementById("confirmSelection").addEventListener("click", () => {
+        document.getElementById("confirmBooking").addEventListener("click", () => {
             console.log("Total Selected Seats:", selectedSeats.size);
             console.log("Selected Seats:", Array.from(selectedSeats));
         });
