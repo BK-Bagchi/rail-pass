@@ -94,5 +94,28 @@ adminRouter.get("/stations/deleteStation/:stationId", deleteStation);
 
 // Admin Fare Management -------------------------------------
 adminRouter.get("/fares", showAllFare);
+// Admin Add Fare
+adminRouter.post("/fares/addFare", async (req, res) => {
+  if (!req.session.user) return res.redirect("/admin/login");
+  try {
+    const newFareList = await Fare.create({
+      trainId: req.body.trainId,
+      farePerKilometer: {
+        AC_Sleeper: req.body.AC_Sleeper,
+        AC_Chair: req.body.AC_Chair,
+        AC_Seat: req.body.AC_Seat, // AC Cabin
+        First_Sleeper: req.body.First_Sleeper,
+        First_Chair: req.body.First_Chair,
+        First_Seat: req.body.First_Seat, // First Cabin
+        General: req.body.General,
+      },
+    });
+    if (newFareList) return res.status(201).redirect("/admin/fares");
+    else
+      return res.status(400).redirect("/admin/fares?error=Failed to add fare");
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Internal Server Error" });
+  }
+});
 
 export default adminRouter;

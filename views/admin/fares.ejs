@@ -67,7 +67,7 @@
 
       <!-- Modal Body -->
       <div class="modal-body">
-        <form action="/fares/addFare" method="POST">
+        <form action="/admin/fares/addFare" method="POST">
             <!-- Train Selection -->
             <div class="mb-3">
                 <label for="trainName" class="form-label fw-bold">Select Train</label>
@@ -97,7 +97,7 @@
                                 <input 
                                     type="number" 
                                     class="form-control" 
-                                    name="fareDetails[<%= seatType %>]" 
+                                    name="<%= seatType %>" 
                                     placeholder="Enter fare per km" 
                                     required
                                 >
