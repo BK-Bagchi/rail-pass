@@ -52,6 +52,18 @@ export const addNewTrain = async (req, res) => {
       (station) => Object.keys(station).length > 0
     );
 
+    // Add starting and ending stations in the station model
+    filteredStations.unshift({
+      stationName: startingStation,
+      arrivalTime: "",
+      departureTime: "",
+    });
+    filteredStations.push({
+      stationName: endingStation,
+      arrivalTime: "",
+      departureTime: "",
+    });
+
     // Between stations are inserted into the Station model
     const stationsToInsert = filteredStations
       .filter(
@@ -151,6 +163,53 @@ export const updateTrain = async (req, res) => {
     const filteredStations = betweenStations.filter(
       (station) => Object.keys(station).length > 0
     );
+
+    // Add starting and ending stations in the station model
+    filteredStations.unshift({
+      stationName: startingStation,
+      arrivalTime: "",
+      departureTime: "",
+    });
+    filteredStations.push({
+      stationName: endingStation,
+      arrivalTime: "",
+      departureTime: "",
+    });
+
+    // Between stations are inserted into the Station model
+    const stationsToInsert = filteredStations
+      .filter(
+        (station) => station.stationName && station.stationName.trim() !== ""
+      )
+      .map((station) => ({
+        stationName: station.stationName,
+        stationCode: "",
+        address: {
+          district: "",
+          division: "",
+          subDivision: "",
+        },
+      }));
+
+    // Insert all stations at once which station names are not already in the database
+    // This prevents duplicate station entries
+    if (stationsToInsert.length > 0) {
+      // Get names of existing stations
+      const existingStationNames = await Station.find(
+        { stationName: { $in: stationsToInsert.map((s) => s.stationName) } },
+        { stationName: 1, _id: 0 }
+      ).lean();
+
+      const existingNamesSet = new Set(
+        existingStationNames.map((s) => s.stationName)
+      );
+      const newStations = stationsToInsert.filter(
+        (s) => !existingNamesSet.has(s.stationName)
+      );
+      if (newStations.length > 0) {
+        await Station.insertMany(newStations);
+      }
+    }
 
     // Update train with new data
     const updatedData = await Train.findByIdAndUpdate(

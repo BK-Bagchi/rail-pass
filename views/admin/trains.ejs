@@ -40,27 +40,26 @@
                         <td>
                             <ul class="list-unstyled mb-0">
                               <% if (train.route && Array.isArray(train.route.betweenStations)) { %>
-  <% train.route.betweenStations.forEach(station => { %>
-    <li>
-      <strong><%= station?.stationName || "N/A" %></strong>
-      (Arrival: <%= station?.arrivalTime || "N/A" %>, Departure: <%= station?.departureTime || "N/A" %>)
-    </li>
-  <% }) %>
-<% } else { %>
-  <li>No stations in between</li>
-<% } %>
-
+                                <% train.route.betweenStations.forEach(station => { %>
+                                  <li>
+                                    <strong><%= station?.stationName || "N/A" %></strong>
+                                    (Arrival: <%= station?.arrivalTime || "N/A" %>, Departure: <%= station?.departureTime || "N/A" %>)
+                                  </li>
+                                <% }) %>
+                              <% } else { %>
+                                <li>No stations in between</li>
+                              <% } %>
                             </ul>
                         </td>
                         <td>
                             <ul class="list-unstyled mb-0">
-                                <li>AC_Sleeper: <%= train.seats.AC_Sleeper %></li>
-                                <li>AC_Chair: <%= train.seats.AC_Chair %></li>
-                                <li>AC_Seat: <%= train.seats.AC_Seat %></li>
-                                <li>First_Sleeper: <%= train.seats.First_Sleeper %></li>
-                                <li>First_Chair: <%= train.seats.First_Chair %></li>
-                                <li>First_Seat: <%= train.seats.First_Seat %></li>
-                                <li>General: <%= train.seats.General %></li>
+                                <li><strong>AC Sleeper:</strong> <%= train.seats.AC_Sleeper %></li>
+                                <li><strong>AC Chair:</strong> <%= train.seats.AC_Chair %></li>
+                                <li><strong>AC Seat:</strong> <%= train.seats.AC_Seat %></li>
+                                <li><strong>First Sleeper:</strong> <%= train.seats.First_Sleeper %></li>
+                                <li><strong>First Chair:</strong> <%= train.seats.First_Chair %></li>
+                                <li><strong>First Seat:</strong> <%= train.seats.First_Seat %></li>
+                                <li><strong>General:</strong> <%= train.seats.General %></li>
                             </ul>
                         </td>
                         
