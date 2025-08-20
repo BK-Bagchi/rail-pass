@@ -26,32 +26,32 @@
         <div class="bg-light rounded-4 shadow-sm p-4 mb-5 border-5 border-primary">
             <h4 class="fw-bold mb-3 text-center text-primary">
                 <i class="bi bi-train-front-fill me-2"></i>
-                <%= trainName %>
+                <%= journeyInfo.trainName %>
             </h4>
             <div class="d-flex flex-wrap justify-content-center gap-3 text-center">
                 <!-- Seat Type -->
                 <div class="p-3 rounded-3 shadow-sm bg-white" style="min-width: 120px;">
                     <i class="bi bi-person-fill fs-4 text-primary"></i>
-                    <div class="fw-semibold mt-1"><%= seatClass.replace("_", " ") %></div>
+                    <div class="fw-semibold mt-1"><%= journeyInfo.seatClass.replace("_", " ") %></div>
                     <small class="text-muted">Seat Type</small>
                 </div>
                 <!-- From Station -->
                 <div class="p-3 rounded-3 shadow-sm bg-white" style="min-width: 120px;">
                     <i class="bi bi-geo-alt-fill fs-4 text-success"></i>
-                    <div class="fw-semibold mt-1"><%= fromStation %></div>
+                    <div class="fw-semibold mt-1"><%= journeyInfo.fromStation %></div>
                     <small class="text-muted">From</small>
                 </div>
                 <!-- To Station -->
                 <div class="p-3 rounded-3 shadow-sm bg-white" style="min-width: 120px;">
                     <i class="bi bi-geo-fill fs-4 text-danger"></i>
-                    <div class="fw-semibold mt-1"><%= toStation %></div>
+                    <div class="fw-semibold mt-1"><%= journeyInfo.toStation %></div>
                     <small class="text-muted">To</small>
                 </div>
                 <!-- Journey Date -->
                 <div class="p-3 rounded-3 shadow-sm bg-white" style="min-width: 160px;">
                     <i class="bi bi-calendar-event fs-4 text-warning"></i>
                     <div class="fw-semibold mt-1">
-                        <%= new Date(journeyDate).toLocaleDateString('en-US', {
+                        <%= new Date(journeyInfo.journeyDate).toLocaleDateString('en-US', {
                                 weekday: 'long',
                                 day: 'numeric',
                                 month: 'long',
@@ -132,11 +132,14 @@
         <div class="text-center mb-5">
             <form id="confirmBookingForm" action="/booking/confirmBooking" method="POST">
                 <input type="hidden" name="trainId" value="<%= trainId %>">
-                <input type="hidden" name="trainName" value="<%= trainName %>">
-                <input type="hidden" name="seatClass" value="<%= seatClass %>">
-                <input type="hidden" name="fromStation" value="<%= fromStation %>">
-                <input type="hidden" name="toStation" value="<%= toStation %>">
-                <input type="hidden" name="journeyDate" value="<%= journeyDate %>">
+                <input type="hidden" name="trainName" value="<%= journeyInfo.trainName %>">
+                <input type="hidden" name="seatClass" value="<%= journeyInfo.seatClass %>">
+                <input type="hidden" name="fromStation" value="<%= journeyInfo.fromStation %>">
+                <input type="hidden" name="departureTime" value="<%= journeyInfo.departureTime %>">
+                <input type="hidden" name="toStation" value="<%= journeyInfo.toStation %>">
+                <input type="hidden" name="arrivalTime" value="<%= journeyInfo.arrivalTime %>">
+                <input type="hidden" name="journeyDate" value="<%= journeyInfo.journeyDate %>">
+                <input type="hidden" name="fareRate" value="<%= journeyInfo.fareRate %>">
                 <input type="hidden" name="totalSeats" id="totalSeats">
                 <input type="hidden" name="selectedSeats" id="selectedSeats">
                 <button type="submit" id="confirmBooking" class="btn btn-lg btn-success px-4">

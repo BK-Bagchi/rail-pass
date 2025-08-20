@@ -28,11 +28,11 @@
                     </li>
                     <li class="list-group-item">
                         <strong>From:</strong> <%= bookingDetails.fromStation %> 
-                        <strong>Departure:</strong> {Time} 
+                        <strong>Departure:</strong> <%= bookingDetails.departureTime %> 
                     </li>
                     <li class="list-group-item">
                         <strong>To:</strong> <%= bookingDetails.toStation %>
-                        <strong>Arrival:</strong> {Time} 
+                        <strong>Arrival:</strong> <%= bookingDetails.arrivalTime %> 
                     </li>
                     <li class="list-group-item">
                         <strong>Journey Date:</strong> 
@@ -56,7 +56,7 @@
                         <strong>Selected Seats:</strong> <%= bookingDetails.selectedSeats.join(", ") %>
                     </li>
                     <li class="list-group-item">
-                        <strong>Total Fare:</strong> 1500 BDT
+                        <strong>Total Fare:</strong> <%= bookingDetails.totalSeats * bookingDetails.fareRate %> BDT
                     </li>
                 </ul>
                 <div class="text-center mt-4">

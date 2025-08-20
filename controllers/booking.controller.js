@@ -106,11 +106,7 @@ export const selectSeat = async (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
   res.render("booking/selectSeat", {
     trainId: req.params.trainId,
-    trainName: req.body.trainName,
-    seatClass: req.body.seatClass,
-    fromStation: req.body.fromStation,
-    toStation: req.body.toStation,
-    journeyDate: req.body.journeyDate,
+    journeyInfo: req.body,
   });
 };
 

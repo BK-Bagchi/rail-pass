@@ -31,16 +31,18 @@
                         <small class="text-muted">Journey Date: <%= journeyDate %></small>
                         </div>
                     </div>
-
+                    <% let departureTime= "", arrivalTime = ""; %>
                     <!-- Route Section -->
                     <div class="row g-4 mb-3 align-items-center">
                         <div class="col-md-5 text-center">
                             <h5 class="fw-bold text-success mb-1"><%= fromStation %></h5>
                             <% if (fromStation === train.route.startingStation) { %>
+                                <% departureTime = train.route.departureTime %>
                                 <p class="mb-0 text-muted"> Departure: <%= train.route.departureTime %> </p>
                             <% } else { %>
                                 <% train.route.betweenStations.forEach(station => { %>
                                     <% if (fromStation === station.stationName) { %>
+                                        <% departureTime = station.departureTime %>
                                         <p class="mb-0 text-muted"> Arrival: <%= station.arrivalTime %> </p>
                                         <p class="mb-0 text-muted"> Departure: <%= station.departureTime %> </p>
                                     <% } %>
@@ -55,10 +57,12 @@
                         <div class="col-md-5 text-center">
                             <h5 class="fw-bold text-danger mb-1"><%= toStation %></h5>
                             <% if (toStation === train.route.endingStation) { %>
+                                <% arrivalTime = train.route.arrivalTime %>
                                 <p class="mb-0 text-muted"> Arrival: <%= train.route.arrivalTime %> </p>
                             <% } else { %>
                                 <% train.route.betweenStations.forEach(station => { %>
                                     <% if (toStation === station.stationName) { %>
+                                        <% arrivalTime = station.arrivalTime %>
                                         <p class="mb-0 text-muted"> Arrival: <%= station.arrivalTime %></p>
                                         <p class="mb-0 text-muted"> Departure: <%= station.departureTime %></p>
                                     <% } %>
@@ -100,9 +104,12 @@
                                 <form action="/booking/selectSeat/<%= train._id %>" method="POST">
                                     <input type="hidden" name="trainName" value="<%= train.trainName %>">
                                     <input type="hidden" name="fromStation" value="<%= fromStation %>">
+                                    <input type="hidden" name="departureTime" value="<%= departureTime %>">
                                     <input type="hidden" name="toStation" value="<%= toStation %>">
+                                    <input type="hidden" name="arrivalTime" value="<%= arrivalTime %>">
                                     <input type="hidden" name="seatClass" value="<%= type %>">
                                     <input type="hidden" name="journeyDate" value="<%= journeyDate %>">
+                                    <input type="hidden" name="fareRate" value="<%= train.fare.farePerKilometer[type] * (journeyStations-1) %>">
                                     <button type="submit" class="border rounded-3 text-center p-2 shadow-sm w-100  <%= train.seats[type] > 0 ? 'bg-white' : 'bg-light text-muted' %>" style="text-decoration: none;" <%= train.seats[type] > 0 ? '' : 'disabled' %> >
                                         <!-- Seat Class -->
                                         <span class="fw-bold d-block"><%= type.replace("_", " ") %></span>                                
@@ -115,7 +122,7 @@
                                         <!-- Fare -->
                                         <% if (train.fare && train.fare.farePerKilometer && typeof journeyStations !== 'undefined') { %>
                                             <small class="text-primary fw-semibold d-block">
-                                                Fare: ৳ <%= train.fare.farePerKilometer[type] * journeyStations %>
+                                                Fare: ৳ <%= train.fare.farePerKilometer[type] * (journeyStations-1) %>
                                             </small>
                                             <% } else { %>
                                             <small class="text-muted d-block">Fare not available</small>
@@ -127,6 +134,7 @@
                     </div>
                 </div>
             </div>
+            <p>Total Stations: <%= journeyStations %></p>
             <% }) %>
         <% } else { %>
             <div class="text-center py-5">
