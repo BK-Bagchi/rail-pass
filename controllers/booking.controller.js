@@ -90,10 +90,7 @@ export const selectSeat = async (req, res) => {
 export const confirmBooking = async (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
   try {
-    // prettier-ignore
-    const { trainId, trainName, seatClass, fromStation, toStation, journeyDate, totalSeats, selectedSeats } = req.body;
-    // prettier-ignore
-    res.render("booking/confirmBooking", { trainId, trainName, seatClass, fromStation, toStation, journeyDate, totalSeats, selectedSeats,});
+    res.render("booking/confirmBooking", { bookingDetails: req.body });
   } catch (error) {
     return res
       .status(500)

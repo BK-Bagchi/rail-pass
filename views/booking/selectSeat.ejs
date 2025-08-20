@@ -195,16 +195,30 @@
             e.preventDefault(); // prevent default form submission
 
             const form = document.getElementById("confirmBookingForm");
+
+            // Check if no seats are selected
+            if (selectedSeats.size === 0) {
+            alert("⚠️ Please select at least one seat before confirming.");
+            return; // stop further execution
+            }
+
+            // Set totalSeats
             document.getElementById("totalSeats").value = selectedSeats.size;
+
+            // Remove old hidden inputs for selectedSeats
             const oldInputs = form.querySelectorAll('input[name="selectedSeats"]');
             oldInputs.forEach(input => input.remove());
+
+            // Add selected seats as hidden inputs
             Array.from(selectedSeats).forEach(seat => {
-                const input = document.createElement("input");
-                input.type = "hidden";
-                input.name = "selectedSeats";
-                input.value = seat;
-                form.appendChild(input);
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "selectedSeats";
+            input.value = seat;
+            form.appendChild(input);
             });
+
+            // Submit the form
             form.submit();
         });
     </script>
