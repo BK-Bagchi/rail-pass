@@ -35,17 +35,35 @@
                     <!-- Route Section -->
                     <div class="row g-4 mb-3 align-items-center">
                         <div class="col-md-5 text-center">
-                        <h5 class="fw-bold text-success mb-1"><%= train.route.startingStation %></h5>
-                        <p class="mb-0 text-muted">Departure: <%= train.route.departureTime %></p>
+                            <h5 class="fw-bold text-success mb-1"><%= fromStation %></h5>
+                            <% if (fromStation === train.route.startingStation) { %>
+                                <p class="mb-0 text-muted"> Departure: <%= train.route.departureTime %> </p>
+                            <% } else { %>
+                                <% train.route.betweenStations.forEach(station => { %>
+                                    <% if (fromStation === station.stationName) { %>
+                                        <p class="mb-0 text-muted"> Arrival: <%= station.arrivalTime %> </p>
+                                        <p class="mb-0 text-muted"> Departure: <%= station.departureTime %> </p>
+                                    <% } %>
+                                <% }) %>
+                            <% } %>
                         </div>
 
                         <div class="col-md-2 text-center">
-                        <i class="bi bi-arrow-right fs-2 text-primary"></i>
+                            <i class="bi bi-arrow-right fs-2 text-primary"></i>
                         </div>
 
                         <div class="col-md-5 text-center">
-                        <h5 class="fw-bold text-danger mb-1"><%= train.route.endingStation %></h5>
-                        <p class="mb-0 text-muted">Arrival: <%= train.route.arrivalTime %></p>
+                            <h5 class="fw-bold text-danger mb-1"><%= toStation %></h5>
+                            <% if (toStation === train.route.endingStation) { %>
+                                <p class="mb-0 text-muted"> Arrival: <%= train.route.arrivalTime %> </p>
+                            <% } else { %>
+                                <% train.route.betweenStations.forEach(station => { %>
+                                    <% if (toStation === station.stationName) { %>
+                                        <p class="mb-0 text-muted"> Arrival: <%= station.arrivalTime %></p>
+                                        <p class="mb-0 text-muted"> Departure: <%= station.departureTime %></p>
+                                    <% } %>
+                                <% }) %>
+                            <% } %>
                         </div>
                     </div>
 
@@ -53,12 +71,24 @@
                     <% if (train.route.betweenStations && train.route.betweenStations.length > 0) { %>
                         <h6 class="fw-bold mt-3 mb-2">Stops:</h6>
                         <div class="d-flex flex-wrap gap-2">
+                        <% for (let i = 0; i < trains.length; i++) { %>
+                            <div class="border rounded-pill px-3 py-1 bg-light small mb-2">
+                                <strong><%= trains[i].route.startingStation || "Unknown" %></strong>  
+                                <span class="text-muted">(D: <%= trains[i].route.departureTime || "-" %>)</span>
+                            </div>
+                        <% } %>
                         <% train.route.betweenStations.forEach(station => { %>
                             <div class="border rounded-pill px-3 py-1 bg-light small">
-                            <strong><%= station.stationName || "Unknown" %></strong>  
-                            <span class="text-muted">(A: <%= station.arrivalTime || "-" %>, D: <%= station.departureTime || "-" %>)</span>
+                                <strong><%= station.stationName || "Unknown" %></strong>  
+                                <span class="text-muted">(A: <%= station.arrivalTime || "-" %>, D: <%= station.departureTime || "-" %>)</span>
                             </div>
                         <% }) %>
+                        <% for (let i = 0; i < trains.length; i++) { %>
+                            <div class="border rounded-pill px-3 py-1 bg-light small mb-2">
+                                <strong><%= trains[i].route.endingStation || "Unknown" %></strong>  
+                                <span class="text-muted">(A: <%= trains[i].route.arrivalTime || "-" %>)</span>
+                            </div>
+                            <% } %>
                         </div>
                     <% } %>
 
