@@ -1,6 +1,7 @@
 import e from "express";
 import Station from "../models/station.model.js";
 import Train from "../models/train.model.js";
+import Fare from "../models/fare.model.js";
 
 export const searchForTrain = async (req, res) => {
   try {
@@ -21,18 +22,6 @@ export const searchForTrain = async (req, res) => {
 export const showTrains = async (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
   try {
-    //Define fares for each seat class
-    // This will be moved to a config file or database later
-    // For now, hardcoding the fares
-    const fares = {
-      AC_Sleeper: 1500,
-      AC_Chair: 1000,
-      AC_Seat: 800,
-      First_Sleeper: 600,
-      First_Chair: 500,
-      First_Seat: 400,
-      General: 200,
-    };
     const { fromStation, toStation, seatClass, journeyDate } = req.body;
     const getAllTrains = await Train.find({
       $and: [
@@ -51,7 +40,45 @@ export const showTrains = async (req, res) => {
       ],
     }).sort({ trainName: 1 });
 
-    if (!getAllTrains || getAllTrains.length === 0)
+    //---------------This part is to calculate how many stations are in the journey----------------
+    const journeyStationsList = getAllTrains
+      .map((train) => {
+        const route = train.route;
+        const allStations = [
+          { name: route.startingStation },
+          ...(route.betweenStations || []).map((st) => ({
+            name: st.stationName,
+          })),
+          { name: route.endingStation },
+        ];
+        const fromIndex = allStations.findIndex(
+          (st) => st.name === fromStation
+        );
+        const toIndex = allStations.findIndex((st) => st.name === toStation);
+
+        // If both stations exist and from < to
+        if (fromIndex !== -1 && toIndex !== -1 && fromIndex < toIndex) {
+          const journeyStations = allStations.slice(fromIndex, toIndex + 1);
+          return {
+            journeyStations,
+          };
+        } else return null;
+      })
+      .filter((t) => t !== null);
+    const journeyLengths = journeyStationsList.map(
+      (train) => train.journeyStations.length
+    );
+    // console.log(journeyLengths[0]);
+    //---------------This part is to calculate how many stations are in the journey----------------
+
+    const trainsWithFares = await Promise.all(
+      getAllTrains.map(async (train) => {
+        const fare = await Fare.findOne({ trainId: train._id }); // fetch fare
+        return { ...train.toObject(), fare };
+      })
+    );
+
+    if (!trainsWithFares || trainsWithFares.length === 0)
       return res.status(404).render("booking/showTrains", {
         trains: null,
         trainFound: "No trains found for the selected route.",
@@ -62,13 +89,13 @@ export const showTrains = async (req, res) => {
       });
 
     res.render("booking/showTrains", {
-      trains: getAllTrains,
+      trains: trainsWithFares,
       trainFound: null,
       fromStation,
       toStation,
       seatClass,
       journeyDate,
-      fares,
+      journeyStations: journeyLengths[0],
     });
   } catch (error) {
     res.status(500).json({ message: error.message || "Internal Server Error" });

@@ -110,11 +110,15 @@
                                         <% if (train.seats[type] > 0) { %>
                                             <span class="badge bg-success d-block mb-1"><%= train.seats[type] %> Seats</span>
                                         <% } else { %>
-                                        <span class="badge bg-danger d-block mb-1">Full</span>
+                                            <span class="badge bg-danger d-block mb-1">Full</span>
                                         <% } %>                                        
                                         <!-- Fare -->
-                                        <% if (fares && fares[type]) { %>
-                                            <small class="text-primary fw-semibold d-block"> Fare: ৳ <%= fares[type] %> </small>
+                                        <% if (train.fare && train.fare.farePerKilometer && typeof journeyStations !== 'undefined') { %>
+                                            <small class="text-primary fw-semibold d-block">
+                                                Fare: ৳ <%= train.fare.farePerKilometer[type] * journeyStations %>
+                                            </small>
+                                            <% } else { %>
+                                            <small class="text-muted d-block">Fare not available</small>
                                         <% } %>
                                     </button>
                                 </form>
