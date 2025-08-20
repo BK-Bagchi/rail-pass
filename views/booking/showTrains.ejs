@@ -103,22 +103,18 @@
                                     <input type="hidden" name="toStation" value="<%= toStation %>">
                                     <input type="hidden" name="seatClass" value="<%= type %>">
                                     <input type="hidden" name="journeyDate" value="<%= journeyDate %>">
-                                    <button type="submit" class="border rounded-3 text-center p-2 shadow-sm w-100
-                                        <%= train.seats[type] > 0 ? 'bg-white' : 'bg-light text-muted' %>"
-                                        style="text-decoration: none;">    
-                                        <!-- Seat Type -->
-                                        <span class="fw-bold d-block"><%= type.replace("_", " ") %></span>
+                                    <button type="submit" class="border rounded-3 text-center p-2 shadow-sm w-100  <%= train.seats[type] > 0 ? 'bg-white' : 'bg-light text-muted' %>" style="text-decoration: none;" <%= train.seats[type] > 0 ? '' : 'disabled' %> >
+                                        <!-- Seat Class -->
+                                        <span class="fw-bold d-block"><%= type.replace("_", " ") %></span>                                
                                         <!-- Availability -->
                                         <% if (train.seats[type] > 0) { %>
                                             <span class="badge bg-success d-block mb-1"><%= train.seats[type] %> Seats</span>
                                         <% } else { %>
-                                            <span class="badge bg-danger d-block mb-1">Full</span>
-                                        <% } %>
+                                        <span class="badge bg-danger d-block mb-1">Full</span>
+                                        <% } %>                                        
                                         <!-- Fare -->
                                         <% if (fares && fares[type]) { %>
-                                            <small class="text-primary fw-semibold d-block">
-                                                Fare: ৳ <%= fares[type] %>
-                                            </small>
+                                            <small class="text-primary fw-semibold d-block"> Fare: ৳ <%= fares[type] %> </small>
                                         <% } %>
                                     </button>
                                 </form>
