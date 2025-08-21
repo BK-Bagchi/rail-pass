@@ -20,6 +20,8 @@
     "mongodb": "^6.18.0",
     "mongoose": "^8.17.1",
     "nodemon": "^3.1.10",
+    "pdfkit": "^0.17.1",
+    "qrcode": "^1.5.4",
     "ssl-commerz-node": "^1.0.4",
     "sslcommerz-lts": "^1.1.0"
   }

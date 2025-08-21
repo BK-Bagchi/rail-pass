@@ -1,4 +1,5 @@
-import e from "express";
+import PDFDocument from "pdfkit";
+import QRCode from "qrcode";
 import Station from "../models/station.model.js";
 import Train from "../models/train.model.js";
 import Fare from "../models/fare.model.js";
@@ -166,5 +167,138 @@ export const doneForNow = async (req, res) => {
     return res
       .status(500)
       .json({ message: error.message || "Internal Server Error" });
+  }
+};
+
+export const success = async (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
+  try {
+    const user = req.session.user;
+    const trainInfo = await Train.findById(req.params.trainId);
+    const bookingInfo = await Booking.findOne({
+      trainId: req.params.trainId,
+      journeyDate: new Date(req.query.journeyDate),
+    });
+    if (!bookingInfo) return res.redirect(`/booking/fail`);
+    res.render("success/success.ejs", {
+      login: req.session.user,
+      user: user,
+      trainInfo: trainInfo,
+      bookingInfo: bookingInfo,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: error.message || "Internal Server Error" });
+  }
+};
+
+export const downloadTicket = async (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
+  try {
+    const booking = await Booking.findById(req.params.pnr)
+      .populate("trainId")
+      .populate("userId");
+
+    if (!booking) return res.status(404).send("Booking not found");
+
+    // Generate QR Code (encode PNR + journey info)
+    const qrData = `PNR: ${booking._id}\nPassenger: ${
+      booking.userId.firstName
+    } ${booking.userId.lastName}\nTrain: ${booking.trainId.trainName} (${
+      booking.trainId.trainNumber
+    })\nJourney: ${new Date(booking.journeyDate).toDateString()}`;
+    const qrImage = await QRCode.toDataURL(qrData);
+    // Create PDF
+    const doc = new PDFDocument();
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="RailPass_${booking._id}.pdf"`
+    );
+    doc.pipe(res);
+
+    // Title
+    doc
+      .fontSize(22)
+      .fillColor("#2E86C1")
+      .text("Rail Pass Train Journey Ticket", {
+        align: "center",
+        underline: true,
+      });
+    doc.moveDown(2);
+
+    // 📌 Ticket Details Box
+    doc
+      .rect(40, 100, 520, 300) // x, y, width, height
+      .stroke("#2E86C1");
+    doc.fontSize(12).fillColor("black");
+    let y = 120;
+    const lineGap = 25;
+
+    const addField = (label, value) => {
+      doc.font("Helvetica-Bold").text(label, 60, y);
+      doc.font("Helvetica").text(value, 200, y);
+      y += lineGap;
+    };
+
+    // Ticket Info
+    addField("PNR:", booking._id.toString());
+    addField(
+      "Passenger:",
+      `${booking.userId.firstName} ${booking.userId.lastName}`
+    );
+    addField(
+      "Train:",
+      `${booking.trainId.trainName} (${booking.trainId.trainNumber})`
+    );
+    addField("From:", booking.fromStation);
+    addField("To:", booking.toStation);
+    addField("Departure:", booking.departureTime);
+    addField("Arrival:", booking.arrivalTime);
+    addField(
+      "Confirmation Date:",
+      new Date(booking.confirmationDate).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    );
+    addField(
+      "Journey Date:",
+      new Date(booking.journeyDate).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    );
+    addField(
+      "Seat:",
+      `${booking.seatClass} - ${booking.seatNumber.join(", ")}`
+    );
+    addField(
+      "Status:",
+      booking.status.charAt(0).toUpperCase() + booking.status.slice(1)
+    );
+    addField("Fare:", `${booking.totalFare} BDT`);
+
+    // 🟦 Insert QR Code (right side)
+    const qrX = 420; // x position
+    const qrY = 140; // y position
+    doc.image(qrImage, qrX, qrY, { fit: [120, 120] });
+
+    // ✨ Footer
+    doc.moveDown(4);
+    doc
+      .fontSize(12)
+      .fillColor("gray")
+      .text("Best wishes from Rail Pass. Have a safe journey!", {
+        align: "center",
+      });
+
+    doc.end();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error generating PDF");
   }
 };

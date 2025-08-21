@@ -5,14 +5,13 @@ import {
   selectSeat,
   confirmBooking,
   doneForNow,
+  success,
+  downloadTicket,
 } from "../controllers/booking.controller.js";
-import Station from "../models/station.model.js";
 import {
   checkoutSuccess,
   createSSLCommerzSession,
 } from "../controllers/paymentGetway.controller.js";
-import Booking from "../models/booking.model.js";
-import Train from "../models/train.model.js";
 
 const bookingRouter = express.Router();
 
@@ -31,33 +30,12 @@ bookingRouter.post("/doneForNow", doneForNow);
 bookingRouter.post("/create-sslcommerz-session", createSSLCommerzSession);
 // Handle the success route
 // bookingRouter.get("/success", checkoutSuccess);
-bookingRouter.get("/success/:trainId", async (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
-  try {
-    const user = req.session.user;
-    const trainInfo = await Train.findById(req.params.trainId);
-    const bookingInfo = await Booking.findOne({
-      trainId: req.params.trainId,
-      journeyDate: new Date(req.query.journeyDate),
-    });
-    if (!bookingInfo) return res.redirect(`/booking/fail`);
-    res.render("success/success.ejs", {
-      login: req.session.user,
-      user: user,
-      trainInfo: trainInfo,
-      bookingInfo: bookingInfo,
-    });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: error.message || "Internal Server Error" });
-  }
-});
-
+bookingRouter.get("/success/:trainId", success);
 // Handle the fail route
 bookingRouter.get("/fail", (req, res) => res.send("failed"));
-
 // Handle the cancel route
 bookingRouter.get("/cancel", (req, res) => res.send("cancelled"));
+//Download PDF ticket
+bookingRouter.get("/downloadTicket/:pnr", downloadTicket);
 
 export default bookingRouter;
