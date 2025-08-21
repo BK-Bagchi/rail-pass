@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Ticket</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="../../js/bootstrap.bundle.min.js"></script>
+    <style>
+        .vh-80 {
+            height: 55vh !important;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/navbar.ejs') %>
+    <div class="container mt-5 vh-80">
+        <h1 class="text-center mb-4">Verify Ticket</h1>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form action="/service/verify-ticket" method="POST" class="shadow-sm p-4 rounded bg-light">
+                    <div class="mb-3">
+                        <label for="pnr" class="form-label fw-bold">Enter PNR / Ticket Number</label>
+                        <input type="text" class="form-control" id="pnr" name="pnr" placeholder="e.g. AsjOP06123K0hsKsP456789" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Verify Ticket</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <%- include('../partials/footer.ejs') %>
+</body>
+</html>

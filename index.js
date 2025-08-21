@@ -8,6 +8,7 @@ import authRouter from "./routes/auth.route.js";
 import bookingRouter from "./routes/booking.route.js";
 import trainRouter from "./routes/train.route.js";
 import adminRouter from "./routes/admin.route.js";
+import serviceRouter from "./routes/service.route.js";
 
 const app = express();
 const port = 4000;
@@ -38,6 +39,7 @@ app.use("/auth", authRouter);
 app.use("/booking", bookingRouter);
 app.use("/train", trainRouter);
 app.use("/admin", adminRouter);
+app.use("/service", serviceRouter);
 
 //Database Connection
 dbConnection();

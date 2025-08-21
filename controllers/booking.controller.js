@@ -194,7 +194,6 @@ export const success = async (req, res) => {
 };
 
 export const downloadTicket = async (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
   try {
     const booking = await Booking.findById(req.params.pnr)
       .populate("trainId")
