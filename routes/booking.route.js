@@ -7,8 +7,8 @@ import {
 } from "../controllers/booking.controller.js";
 import Station from "../models/station.model.js";
 import {
-  checkoutSession,
   checkoutSuccess,
+  createSSLCommerzSession,
 } from "../controllers/paymentGetway.controller.js";
 import Booking from "../models/booking.model.js";
 
@@ -37,8 +37,14 @@ bookingRouter.post("/payment", async (req, res) => {
 });
 
 //✔ Proceed to Payment GetWay
-bookingRouter.post("/create-checkout-session", checkoutSession);
+bookingRouter.post("/create-sslcommerz-session", createSSLCommerzSession);
 // Handle the success route
 bookingRouter.get("/success", checkoutSuccess);
+
+// Handle the fail route
+bookingRouter.get("/fail", (req, res) => res.send("failed"));
+
+// Handle the cancel route
+bookingRouter.get("/cancel", (req, res) => res.send("cancelled"));
 
 export default bookingRouter;
