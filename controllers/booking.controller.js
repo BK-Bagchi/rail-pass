@@ -80,6 +80,7 @@ export const showTrains = async (req, res) => {
 
     if (!trainsWithFares || trainsWithFares.length === 0)
       return res.status(404).render("booking/showTrains", {
+        login: req.session.user,
         trains: null,
         trainFound: "No trains found for the selected route.",
         fromStation: null,
@@ -89,6 +90,7 @@ export const showTrains = async (req, res) => {
       });
 
     res.render("booking/showTrains", {
+      login: req.session.user,
       trains: trainsWithFares,
       trainFound: null,
       fromStation,
@@ -103,17 +105,21 @@ export const showTrains = async (req, res) => {
 };
 
 export const selectSeat = async (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
+  // if (!req.session.user) return res.redirect("/auth/login");
   res.render("booking/selectSeat", {
+    login: req.session.user,
     trainId: req.params.trainId,
     journeyInfo: req.body,
   });
 };
 
 export const confirmBooking = async (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
+  // if (!req.session.user) return res.redirect("/auth/login");
   try {
-    res.render("booking/confirmBooking", { bookingDetails: req.body });
+    res.render("booking/confirmBooking", {
+      login: req.session.user,
+      bookingDetails: req.body,
+    });
   } catch (error) {
     return res
       .status(500)

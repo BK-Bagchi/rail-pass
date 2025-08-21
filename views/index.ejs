@@ -9,7 +9,7 @@
     <script src="/js/bootstrap.bundle.min.js"></script>
   </head>
   <body>
-    <%- include('partials/navbar') %>
+    <%- include('partials/navbar', {login: login}) %>
     <div class="container mt-5">
       <%- include('booking/form', {
         login: login,

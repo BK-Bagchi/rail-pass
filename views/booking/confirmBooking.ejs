@@ -53,14 +53,18 @@
                         <strong>Total Seats Booked:</strong> <%= bookingDetails.totalSeats %>
                     </li>
                     <li class="list-group-item">
-                        <strong>Selected Seats:</strong> <%= bookingDetails.selectedSeats.join(", ") %>
+                        <strong>Selected Seats:</strong> 
+                        <!-- Doesn't let the program crush if selectedSeats is not an array -->
+                        <%= Array.isArray(bookingDetails.selectedSeats) 
+                                ? bookingDetails.selectedSeats.join(", ") 
+                                : bookingDetails.selectedSeats %>
                     </li>
                     <li class="list-group-item">
                         <strong>Total Fare:</strong> <%= bookingDetails.totalSeats * bookingDetails.fareRate %> BDT
                     </li>
                 </ul>
                 <div class="text-center mt-4 d-flex justify-content-center gap-2">
-                    <form id="paymentForm" action="/booking/payment" method="POST">
+                    <form id="paymentForm" action="/booking/create-checkout-session" method="POST">
                         <!-- Hidden inputs for booking details -->
                         <input type="hidden" name="trainId" value=" <%= bookingDetails.trainId %>">
                         <input type="hidden" name="trainName" value=" <%= bookingDetails.trainName %>">

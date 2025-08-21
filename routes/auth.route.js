@@ -9,7 +9,11 @@ const authRouter = express.Router();
 
 // ✔ User Login
 authRouter.get("/login", (req, res) => {
-  res.render("auth/login", { userMissMatch: null, passwordMissMatch: null });
+  res.render("auth/login", {
+    login: null,
+    userMissMatch: null,
+    passwordMissMatch: null,
+  });
 });
 authRouter.post("/login", loginUser);
 
@@ -19,7 +23,11 @@ authRouter.get("/logout", logoutUser);
 
 // ✔ User Registration
 authRouter.get("/register", (req, res) => {
-  res.render("auth/register", { userMissMatch: null, passwordMissMatch: null });
+  res.render("auth/register", {
+    login: null,
+    userMissMatch: null,
+    passwordMissMatch: null,
+  });
 });
 authRouter.post("/register", registerUser);
 

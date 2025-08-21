@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    train: { type: mongoose.Schema.Types.ObjectId, ref: "Train" },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    trainId: { type: mongoose.Schema.Types.ObjectId, ref: "Train" },
     pnr: { type: String },
     seatClass: {
       type: String,

@@ -6,6 +6,11 @@ import {
   confirmBooking,
 } from "../controllers/booking.controller.js";
 import Station from "../models/station.model.js";
+import {
+  checkoutSession,
+  checkoutSuccess,
+} from "../controllers/paymentGetway.controller.js";
+import Booking from "../models/booking.model.js";
 
 const bookingRouter = express.Router();
 
@@ -30,4 +35,10 @@ bookingRouter.post("/payment", async (req, res) => {
       .json({ message: error.message || "Internal Server Error" });
   }
 });
+
+//✔ Proceed to Payment GetWay
+bookingRouter.post("/create-checkout-session", checkoutSession);
+// Handle the success route
+bookingRouter.get("/success", checkoutSuccess);
+
 export default bookingRouter;
