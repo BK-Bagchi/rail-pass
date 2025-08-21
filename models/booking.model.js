@@ -4,7 +4,6 @@ const bookingSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     trainId: { type: mongoose.Schema.Types.ObjectId, ref: "Train" },
-    pnr: { type: String },
     seatClass: {
       type: String,
       enum: [

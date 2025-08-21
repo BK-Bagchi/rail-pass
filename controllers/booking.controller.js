@@ -2,6 +2,7 @@ import e from "express";
 import Station from "../models/station.model.js";
 import Train from "../models/train.model.js";
 import Fare from "../models/fare.model.js";
+import Booking from "../models/booking.model.js";
 
 export const searchForTrain = async (req, res) => {
   try {
@@ -105,7 +106,7 @@ export const showTrains = async (req, res) => {
 };
 
 export const selectSeat = async (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("booking/selectSeat", {
     login: req.session.user,
     trainId: req.params.trainId,
@@ -114,12 +115,53 @@ export const selectSeat = async (req, res) => {
 };
 
 export const confirmBooking = async (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   try {
     res.render("booking/confirmBooking", {
       login: req.session.user,
       bookingDetails: req.body,
     });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: error.message || "Internal Server Error" });
+  }
+};
+
+export const doneForNow = async (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
+  try {
+    const today = new Date();
+    const confirmationDate = today.toISOString().split("T")[0];
+    let selectedSeats = req.body.selectedSeats;
+    const seatNumber = selectedSeats
+      .split(",") // split by comma
+      .map((s) => s.trim()) // remove any extra spaces
+      .filter((s) => s); // remove empty strings
+
+    const bookingDetails = {
+      userId: req.session.user._id,
+      trainId: req.body.trainId.trim(), //delete space from both sides
+      seatClass: req.body.seatClass.trim(), //delete space from both sides
+      seatNumber: seatNumber,
+      confirmationDate: confirmationDate,
+      journeyDate: req.body.journeyDate,
+      fromStation: req.body.fromStation,
+      toStation: req.body.toStation.trim(), //delete space from both sides
+      totalFare: Number(req.body.fare),
+      status: "confirmed",
+    };
+
+    const createBooking = await Booking.create(bookingDetails);
+    if (createBooking)
+      return res
+        .status(201)
+        .redirect(
+          `/booking/success/${req.body.trainId.trim()}?journeyDate=${
+            req.body.journeyDate
+          }`
+        );
+    else res.status(400).redirect("/booking/fail");
   } catch (error) {
     return res
       .status(500)
