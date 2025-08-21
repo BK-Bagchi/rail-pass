@@ -141,13 +141,15 @@ export const doneForNow = async (req, res) => {
 
     const bookingDetails = {
       userId: req.session.user._id,
-      trainId: req.body.trainId.trim(), //delete space from both sides
-      seatClass: req.body.seatClass.trim(), //delete space from both sides
+      trainId: req.body.trainId,
+      seatClass: req.body.seatClass,
       seatNumber: seatNumber,
       confirmationDate: confirmationDate,
       journeyDate: req.body.journeyDate,
       fromStation: req.body.fromStation,
-      toStation: req.body.toStation.trim(), //delete space from both sides
+      departureTime: req.body.departureTime,
+      toStation: req.body.toStation,
+      arrivalTime: req.body.arrivalTime,
       totalFare: Number(req.body.fare),
       status: "confirmed",
     };
@@ -157,9 +159,7 @@ export const doneForNow = async (req, res) => {
       return res
         .status(201)
         .redirect(
-          `/booking/success/${req.body.trainId.trim()}?journeyDate=${
-            req.body.journeyDate
-          }`
+          `/booking/success/${req.body.trainId}?journeyDate=${req.body.journeyDate}`
         );
     else res.status(400).redirect("/booking/fail");
   } catch (error) {

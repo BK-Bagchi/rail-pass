@@ -20,8 +20,10 @@ const bookingSchema = new mongoose.Schema(
     seatNumber: [{ type: String }],
     confirmationDate: { type: Date },
     journeyDate: { type: Date },
-    formStation: { type: String },
+    fromStation: { type: String },
+    departureTime: { type: String },
     toStation: { type: String },
+    arrivalTime: { type: String },
     totalFare: { type: Number },
     status: {
       type: String,

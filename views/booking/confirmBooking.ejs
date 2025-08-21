@@ -66,18 +66,18 @@
                 <div class="text-center mt-4 d-flex justify-content-center gap-2">
                     <form id="paymentForm" action="/booking/doneForNow" method="POST">
                         <!-- Hidden inputs for booking details -->
-                        <input type="hidden" name="trainId" value=" <%= bookingDetails.trainId %>">
-                        <input type="hidden" name="trainName" value=" <%= bookingDetails.trainName %>">
-                        <input type="hidden" name="seatClass" value=" <%= bookingDetails.seatClass %>">
-                        <input type="hidden" name="fromStation" value=" <%= bookingDetails.fromStation %>">
-                        <input type="hidden" name="departureTime" value=" <%= bookingDetails.departureTime %>">
-                        <input type="hidden" name="toStation" value=" <%= bookingDetails.toStation %>">
-                        <input type="hidden" name="arrivalTime" value=" <%= bookingDetails.arrivalTime %>">
-                        <input type="hidden" name="journeyDate" value=" <%= bookingDetails.journeyDate %>">
-                        <input type="hidden" name="fareRate" value=" <%= bookingDetails.fareRate %>">
-                        <input type="hidden" name="selectedSeats" value=" <%= bookingDetails.selectedSeats %>">
-                        <input type="hidden" name="totalSeats" value=" <%= bookingDetails.totalSeats %>">
-                        <input type="hidden" name="fare" value=" <%= bookingDetails.totalSeats * bookingDetails.fareRate %>">           
+                        <input type="hidden" name="trainId" value="<%= bookingDetails.trainId %>">
+                        <input type="hidden" name="trainName" value="<%= bookingDetails.trainName %>">
+                        <input type="hidden" name="seatClass" value="<%= bookingDetails.seatClass %>">
+                        <input type="hidden" name="fromStation" value="<%= bookingDetails.fromStation %>">
+                        <input type="hidden" name="departureTime" value="<%= bookingDetails.departureTime %>">
+                        <input type="hidden" name="toStation" value="<%= bookingDetails.toStation %>">
+                        <input type="hidden" name="arrivalTime" value="<%= bookingDetails.arrivalTime %>">
+                        <input type="hidden" name="journeyDate" value="<%= bookingDetails.journeyDate %>">
+                        <input type="hidden" name="fareRate" value="<%= bookingDetails.fareRate %>">
+                        <input type="hidden" name="selectedSeats" value="<%= bookingDetails.selectedSeats %>">
+                        <input type="hidden" name="totalSeats" value="<%= bookingDetails.totalSeats %>">
+                        <input type="hidden" name="fare" value="<%= bookingDetails.totalSeats * bookingDetails.fareRate %>">           
                         <!-- Submit Button -->
                         <button type="submit" class="btn btn-primary btn-lg px-4 me-2" id="paymentBtn">
                             Proceed to Payment (<span id="paymentTimer"></span>s)
