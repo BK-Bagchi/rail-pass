@@ -1,7 +1,8 @@
 import User from "../models/user.model.js";
 
 export const getAllUser = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
 
   try {
     const allUsers = await User.find();
@@ -26,7 +27,8 @@ export const getAllUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,

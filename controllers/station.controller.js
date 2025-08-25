@@ -1,7 +1,8 @@
 import Station from "../models/station.model.js";
 
 export const getAllStation = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
     const allStations = await Station.find().sort({ stationName: 1 });
     if (!allStations || allStations.length === 0) {
@@ -26,7 +27,8 @@ export const getAllStation = async (req, res) => {
 };
 
 export const addNewStation = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
     const newStation = await Station.create({
       stationName: req.body.stationName,
@@ -48,7 +50,8 @@ export const addNewStation = async (req, res) => {
 };
 
 export const updateStation = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
     const updatedStation = await Station.findByIdAndUpdate(
       req.params.stationId,
@@ -74,7 +77,8 @@ export const updateStation = async (req, res) => {
 };
 
 export const deleteStation = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
     const deletedStation = await Station.findByIdAndDelete(
       req.params.stationId

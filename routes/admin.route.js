@@ -29,7 +29,8 @@ adminRouter.get("/", (req, res) => {
   res.redirect("/admin/login");
 });
 adminRouter.get("/login", (req, res) => {
-  if (req.session.user) return res.redirect("/admin/dashboard");
+  if (req.session.user && req.session.user.role === "admin")
+    return res.redirect("/admin/dashboard");
   res.render("admin/login", {
     login: req.session.user,
     userMissMatch: null,
@@ -41,7 +42,8 @@ adminRouter.post("/login", adminVerification);
 
 //Admin Dashboard-----------------------------------------------
 adminRouter.get("/dashboard", (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   res.render("admin/dashboard", {
     login: req.session.user,
     management: "admin",

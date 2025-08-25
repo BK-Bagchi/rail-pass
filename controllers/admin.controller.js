@@ -4,8 +4,9 @@ import User from "../models/user.model.js";
 export const adminVerification = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
-    if (!user)
+    if (!user || user.role !== "admin")
       return res.status(404).render("auth/login", {
+        login: req.session.user,
         userMissMatch: "You are not an registered Admin.",
         passwordMissMatch: null,
       });
@@ -16,6 +17,7 @@ export const adminVerification = async (req, res) => {
     );
     if (!isPasswordValid)
       return res.status(400).render("auth/login", {
+        login: req.session.user,
         userMissMatch: null,
         passwordMissMatch: "Incorrect password. Please try again.",
       });

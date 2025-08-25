@@ -2,7 +2,8 @@ import Fare from "../models/fare.model.js";
 import Train from "../models/train.model.js";
 
 export const showAllFare = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
     const fares = await Fare.find().populate({
       path: "trainId", // matches the ref in Fare schema
@@ -32,7 +33,8 @@ export const showAllFare = async (req, res) => {
 };
 
 export const addNewFare = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
     const newFareList = await Fare.create({
       trainId: req.body.trainId,
@@ -55,7 +57,8 @@ export const addNewFare = async (req, res) => {
 };
 
 export const updateFare = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
     //prettier-ignore
     const updatedFare = await Fare.findByIdAndUpdate(
@@ -82,7 +85,8 @@ export const updateFare = async (req, res) => {
 };
 
 export const deleteFare = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
     const deleteFare = await Fare.findByIdAndDelete(req.params.fareId);
     if (deleteFare)

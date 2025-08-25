@@ -2,7 +2,8 @@ import Station from "../models/station.model.js";
 import Train from "../models/train.model.js";
 
 export const getAllTrain = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
     const allTrain = await Train.find().sort({ trainName: 1 });
     if (!allTrain || allTrain.length === 0) {
@@ -27,7 +28,8 @@ export const getAllTrain = async (req, res) => {
 };
 
 export const addNewTrain = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
     // prettier-ignore
     const { trainNumber, trainName, startingStation, endingStation, arrivalTime, departureTime, AC_Sleeper, AC_Chair, AC_Seat, First_Sleeper, First_Chair, First_Seat, General, ...rest } = req.body;
@@ -138,9 +140,10 @@ export const addNewTrain = async (req, res) => {
 };
 
 export const updateTrain = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
-  const { trainId } = req.params;
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
+    const { trainId } = req.params;
     // prettier-ignore
     const { trainNumber, trainName, startingStation, endingStation, arrivalTime, departureTime, AC_Sleeper, AC_Chair, AC_Seat, First_Sleeper, First_Chair, First_Seat, General, ...rest } = req.body;
 
@@ -251,7 +254,8 @@ export const updateTrain = async (req, res) => {
 };
 
 export const deleteTrain = async (req, res) => {
-  if (!req.session.user) return res.redirect("/admin/login");
+  if (!req.session.user || req.session.user.role !== "admin")
+    return res.redirect("/admin/login");
   try {
     const { trainId } = req.params;
     const deleteTrain = await Train.findByIdAndDelete(trainId);
