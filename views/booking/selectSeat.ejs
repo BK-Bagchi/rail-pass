@@ -62,16 +62,6 @@
                 </div>
             </div>
         </div>
-        <!-- Coach Tabs -->
-        <div class="d-flex justify-content-center mb-4 flex-wrap gap-2">
-            <% ["A", "B", "C", "D"].forEach((coach, index) => { %>
-                <button 
-                    class="btn btn-lg <%= index === 0 ? 'btn-primary' : 'btn-outline-primary' %> coach-btn"
-                    data-coach="<%= coach %>">
-                    Coach <%= coach %>
-                </button>
-            <% }) %>
-        </div>
         <!-- Legend / Seat Status Indicator -->
         <div class="d-flex justify-content-center mb-4 gap-4">
             <div class="d-flex align-items-center">
@@ -87,8 +77,46 @@
                 <span>Already Booked</span>
             </div>
         </div>
+        <!-- Coach Tabs -->
+        <div class="d-flex justify-content-center mb-4 flex-wrap gap-2">
+            <% 
+                let coachBase = "";
+                if (journeyInfo.seatClass === "AC_Sleeper" || journeyInfo.seatClass === "AC_Chair" || journeyInfo.seatClass === "AC_Seat") {
+                    coachBase = "A";
+                } else if (journeyInfo.seatClass === "First_Sleeper" || journeyInfo.seatClass === "First_Chair" || journeyInfo.seatClass === "First_Seat") {
+                    coachBase = "F";
+                } else if (journeyInfo.seatClass === "General") {
+                    coachBase = "G";
+                }
+
+                // calculate number of coaches (ceil because partial coach also counts)
+                let numCoaches = Math.ceil(journeyInfo.totalSeats / 90);
+
+                // Generate coach codes dynamically (AA, AB, AC... or FA, FB...)
+                let coachPrefixes = [];
+                for (let i = 0; i < numCoaches; i++) {
+                    if (coachBase === "G") {
+                        coachPrefixes.push("G" + (i + 1)); // G1, G2, G3
+                    } else {
+                        coachPrefixes.push(coachBase + String.fromCharCode(65 + i)); // AA, AB, AC or FA, FB, FC
+                    }
+                }
+            %>
+
+            <% coachPrefixes.forEach((coach, index) => { %>
+                <button 
+                    class="btn btn-lg <%= index === 0 ? 'btn-primary' : 'btn-outline-primary' %> coach-btn"
+                    data-coach="<%= coach %>">
+                    Coach <%= coach %>
+                </button>
+            <% }) %>
+        </div>
         <!-- Coaches -->
-        <% ["A", "B", "C", "D"].forEach((coach, index) => { %>
+        <% coachPrefixes.forEach((coach, index) => { 
+            // Seats per coach (max 90 or remaining seats)
+            const totalSeatsInCoach = Math.min(90, journeyInfo.totalSeats - index * 90);
+            const numRows = Math.ceil(totalSeatsInCoach / 5);
+        %>
             <div class="coach-container <%= index === 0 ? '' : 'd-none' %>" id="coach-<%= coach %>">
                 <div class="card mb-4 shadow-sm border-0">
                     <div class="card-header bg-primary text-white fw-bold">
@@ -96,32 +124,21 @@
                     </div>
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center gap-2">
-                            <% for (let row = 0; row < 18; row++) { %>
+                            <% for (let row = 0; row < numRows; row++) { %>
                                 <div class="d-flex align-items-center gap-2">
-                                    <!-- Left 2 seats -->
-                                    <button type="button" class="btn btn-outline-success seat-btn" 
-                                        data-seat="<%= coach + (row*5 + 1) %>">
-                                        <%= coach + (row*5 + 1) %>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-success seat-btn" 
-                                        data-seat="<%= coach + (row*5 + 2) %>">
-                                        <%= coach + (row*5 + 2) %>
-                                    </button>
-                                    <!-- Aisle space -->
-                                    <div style="width:50px;"></div>
-                                    <!-- Right 3 seats -->
-                                    <button type="button" class="btn btn-outline-success seat-btn" 
-                                        data-seat="<%= coach + (row*5 + 3) %>">
-                                        <%= coach + (row*5 + 3) %>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-success seat-btn" 
-                                        data-seat="<%= coach + (row*5 + 4) %>">
-                                        <%= coach + (row*5 + 4) %>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-success seat-btn" 
-                                        data-seat="<%= coach + (row*5 + 5) %>">
-                                        <%= coach + (row*5 + 5) %>
-                                    </button>
+                                    <% for (let seatInRow = 1; seatInRow <= 5; seatInRow++) { %>
+                                      <% const seatNumber = row * 5 + seatInRow; %>
+                                        <% if (seatNumber > totalSeatsInCoach) break; %>
+                                    
+                                        <% if (seatInRow === 3) { %>
+                                            <!-- Aisle space -->
+                                            <div style="width:50px;"></div>
+                                        <% } %>
+                                        <button type="button" class="btn btn-outline-success seat-btn" 
+                                            data-seat="<%= coach + seatNumber %>">
+                                            <%= `${coach}-${seatNumber}` %>
+                                        </button>
+                                    <% } %>
                                 </div>
                             <% } %>
                         </div>
