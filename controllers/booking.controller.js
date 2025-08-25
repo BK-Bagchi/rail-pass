@@ -132,7 +132,7 @@ export const showTrains = async (req, res) => {
 };
 
 export const selectSeat = async (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   try {
     const seatInfo = await Train.findOne(
       {
@@ -142,10 +142,15 @@ export const selectSeat = async (req, res) => {
       { [`seats.${req.body.seatClass}`]: 1, _id: 0 }
     );
     const totalSeats = seatInfo.seats[req.body.seatClass];
+    const findBookedSeat = await Booking.find({
+      trainId: req.params.trainId,
+      journeyDate: req.body.journeyDate,
+    });
+    const bookedSeats = findBookedSeat.flatMap((seat) => seat.seatNumber);
     res.render("booking/selectSeat", {
       login: req.session.user,
       trainId: req.params.trainId,
-      journeyInfo: { ...req.body, totalSeats },
+      journeyInfo: { ...req.body, totalSeats, bookedSeats },
     });
   } catch (error) {
     return res

@@ -112,11 +112,11 @@
             <% }) %>
         </div>
         <!-- Coaches -->
-        <% coachPrefixes.forEach((coach, index) => { 
-            // Seats per coach (max 90 or remaining seats)
-            const totalSeatsInCoach = Math.min(90, journeyInfo.totalSeats - index * 90);
-            const numRows = Math.ceil(totalSeatsInCoach / 5);
-        %>
+        <% coachPrefixes.forEach((coach, index) => { %>
+            <% 
+                const totalSeatsInCoach = Math.min(90, journeyInfo.totalSeats - index * 90);
+                const numRows = Math.ceil(totalSeatsInCoach / 5); 
+            %>
             <div class="coach-container <%= index === 0 ? '' : 'd-none' %>" id="coach-<%= coach %>">
                 <div class="card mb-4 shadow-sm border-0">
                     <div class="card-header bg-primary text-white fw-bold">
@@ -127,17 +127,22 @@
                             <% for (let row = 0; row < numRows; row++) { %>
                                 <div class="d-flex align-items-center gap-2">
                                     <% for (let seatInRow = 1; seatInRow <= 5; seatInRow++) { %>
-                                      <% const seatNumber = row * 5 + seatInRow; %>
+                                        <% const seatNumber = row * 5 + seatInRow; %>
                                         <% if (seatNumber > totalSeatsInCoach) break; %>
-                                    
+                                        
                                         <% if (seatInRow === 3) { %>
-                                            <!-- Aisle space -->
-                                            <div style="width:50px;"></div>
+                                            <div style="width:50px;"></div> <!-- Aisle -->
                                         <% } %>
-                                        <button type="button" class="btn btn-outline-success seat-btn" 
-                                            data-seat="<%= coach + seatNumber %>">
-                                            <%= `${coach}-${seatNumber}` %>
-                                        </button>
+
+                                        <% const seatId = `${coach}-${seatNumber}`; %>
+                                        <% if (journeyInfo.bookedSeats.includes(seatId)) { %>
+                                            <button class="btn btn-danger seat-btn" disabled><%= seatId %></button>
+                                        <% } else { %>
+                                            <button type="button" class="btn btn-outline-success seat-btn" 
+                                                data-seat="<%= seatId %>">
+                                                <%= seatId %>
+                                            </button>
+                                        <% } %>
                                     <% } %>
                                 </div>
                             <% } %>
