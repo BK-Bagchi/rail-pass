@@ -6,12 +6,14 @@ export const getAllStation = async (req, res) => {
     const allStations = await Station.find().sort({ stationName: 1 });
     if (!allStations || allStations.length === 0) {
       return res.status(404).render("admin/dashboard", {
+        login: req.session.user,
         stations: null,
         stationFound: "No stations found. Please add some stations.",
         management: "stations",
       });
     }
     res.render("admin/dashboard", {
+      login: req.session.user,
       stations: allStations,
       stationFound: null,
       management: "stations",

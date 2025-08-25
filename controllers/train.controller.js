@@ -7,12 +7,14 @@ export const getAllTrain = async (req, res) => {
     const allTrain = await Train.find().sort({ trainName: 1 });
     if (!allTrain || allTrain.length === 0) {
       return res.status(404).render("admin/dashboard", {
+        login: req.session.user,
         trains: null,
         trainFound: "No trains found.",
         management: "trains",
       });
     }
     res.render("admin/dashboard", {
+      login: req.session.user,
       trains: allTrain,
       trainFound: null,
       management: "trains",

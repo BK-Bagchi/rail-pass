@@ -4,21 +4,12 @@ import User from "../models/user.model.js";
 
 export const registerUser = async (req, res) => {
   try {
-    const {
-      firstName,
-      lastName,
-      email,
-      phone,
-      dateOfBirth,
-      location,
-      district,
-      division,
-      postCode,
-      password,
-      confirmPassword,
+    //prettier-ignore
+    const { firstName, lastName, email, phone, dateOfBirth, location, district, division, postCode, password, confirmPassword,
     } = req.body;
     if (password !== confirmPassword)
       return res.status(400).render("auth/register", {
+        login: req.session.user,
         userMissMatch: null,
         passwordMissMatch: "Passwords do not match",
       });
@@ -26,25 +17,22 @@ export const registerUser = async (req, res) => {
     const existingUser = await User.findOne({ email: email });
     if (existingUser)
       return res.status(400).render("auth/login", {
+        login: req.session.user,
         userMissMatch: "User already exists. Login to continue",
         passwordMissMatch: null,
       });
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    //prettier-ignore
     const newUser = await User.create({
-      firstName,
-      lastName,
-      email,
-      phone,
-      dateOfBirth,
-      location,
-      district,
-      division,
-      postCode,
+      firstName,  lastName, email, phone, dateOfBirth, location, district, division, postCode,
       password: hashedPassword,
     });
     if (newUser)
       return res.status(201).render("auth/login", {
+        login: req.session.user,
+        userMissMatch: null,
+        passwordMissMatch: null,
         message: "User registered successfully. Please login to continue",
       });
   } catch (error) {

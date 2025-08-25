@@ -30,7 +30,11 @@ adminRouter.get("/", (req, res) => {
 });
 adminRouter.get("/login", (req, res) => {
   if (req.session.user) return res.redirect("/admin/dashboard");
-  res.render("admin/login", { userMissMatch: null, passwordMissMatch: null });
+  res.render("admin/login", {
+    login: req.session.user,
+    userMissMatch: null,
+    passwordMissMatch: null,
+  });
 });
 //✔ Admin Login post
 adminRouter.post("/login", adminVerification);
@@ -38,7 +42,10 @@ adminRouter.post("/login", adminVerification);
 //Admin Dashboard-----------------------------------------------
 adminRouter.get("/dashboard", (req, res) => {
   if (!req.session.user) return res.redirect("/admin/login");
-  res.render("admin/dashboard", { management: "admin" });
+  res.render("admin/dashboard", {
+    login: req.session.user,
+    management: "admin",
+  });
 });
 
 // Admin User Management--------------------------------------

@@ -21,6 +21,7 @@ export const showAllFare = async (req, res) => {
     //   return res.status(404).json({ message: "No trains found" });
 
     res.render("admin/dashboard", {
+      login: req.session.user,
       management: "fares",
       trains: trainInfo,
       fares: fares,

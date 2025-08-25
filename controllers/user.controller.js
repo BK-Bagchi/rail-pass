@@ -7,11 +7,13 @@ export const getAllUser = async (req, res) => {
     const allUsers = await User.find();
     if (!allUsers || allUsers.length === 0)
       return res.status(404).render("admin/dashboard", {
+        login: req.session.user,
         users: null,
         userFound: "No users found.",
         management: "users",
       });
     res.render("admin/dashboard", {
+      login: req.session.user,
       users: allUsers,
       userFound: null,
       management: "users",
