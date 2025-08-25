@@ -22,7 +22,7 @@ export const searchForTrain = async (req, res) => {
 };
 
 export const showTrains = async (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   try {
     const { fromStation, toStation, seatClass, journeyDate } = req.body;
 
@@ -132,12 +132,26 @@ export const showTrains = async (req, res) => {
 };
 
 export const selectSeat = async (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
-  res.render("booking/selectSeat", {
-    login: req.session.user,
-    trainId: req.params.trainId,
-    journeyInfo: req.body,
-  });
+  // if (!req.session.user) return res.redirect("/auth/login");
+  try {
+    const seatInfo = await Train.findOne(
+      {
+        _id: req.params.trainId,
+        [`seats.${req.body.seatClass}`]: { $gt: 0 },
+      },
+      { [`seats.${req.body.seatClass}`]: 1, _id: 0 }
+    );
+    const totalSeats = seatInfo.seats[req.body.seatClass];
+    res.render("booking/selectSeat", {
+      login: req.session.user,
+      trainId: req.params.trainId,
+      journeyInfo: { ...req.body, totalSeats },
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: error.message || "Internal Server Error" });
+  }
 };
 
 export const confirmBooking = async (req, res) => {
