@@ -99,7 +99,7 @@
                     <!-- Seat Availability -->
                     <h6 class="fw-bold mt-4 mb-2">Available Seats:</h6>
                     <div class="row g-2">
-                        <% Object.keys(train.seats).forEach(type => { %>
+                        <% Object.keys(train.remainingSeats).forEach(type => { %>
                             <div class="col-md-3 col-6">
                                 <form action="/booking/selectSeat/<%= train._id %>" method="POST">
                                     <input type="hidden" name="trainName" value="<%= train.trainName %>">
@@ -114,11 +114,13 @@
                                         <!-- Seat Class -->
                                         <span class="fw-bold d-block"><%= type.replace("_", " ") %></span>                                
                                         <!-- Availability -->
-                                        <% if (train.seats[type] > 0) { %>
-                                            <span class="badge bg-success d-block mb-1"><%= train.seats[type] %> Seats</span>
+                                        <% if (train.remainingSeats[type] > 0) { %>
+                                        <span class="badge bg-success d-block mb-1">
+                                            <%= train.remainingSeats[type] %> Seats Available
+                                        </span>
                                         <% } else { %>
-                                            <span class="badge bg-danger d-block mb-1">Full</span>
-                                        <% } %>                                        
+                                        <span class="badge bg-danger d-block mb-1">Sold Out</span>
+                                        <% } %>                                       
                                         <!-- Fare -->
                                         <% if (train.fare && train.fare.farePerKilometer && typeof journeyStations !== 'undefined') { %>
                                             <small class="text-primary fw-semibold d-block">

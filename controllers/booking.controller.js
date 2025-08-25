@@ -22,9 +22,10 @@ export const searchForTrain = async (req, res) => {
 };
 
 export const showTrains = async (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
+  // if (!req.session.user) return res.redirect("/auth/login");
   try {
     const { fromStation, toStation, seatClass, journeyDate } = req.body;
+
     const getAllTrains = await Train.find({
       $and: [
         {
@@ -42,7 +43,26 @@ export const showTrains = async (req, res) => {
       ],
     }).sort({ trainName: 1 });
 
-    //---------------This part is to calculate how many stations are in the journey----------------
+    if (!getAllTrains || getAllTrains.length === 0) {
+      return res.status(404).render("booking/showTrains", {
+        login: req.session.user,
+        trains: null,
+        trainFound: "No trains found for the selected route.",
+        fromStation,
+        toStation,
+        seatClass,
+        journeyDate,
+      });
+    }
+
+    const trainIds = getAllTrains.map((train) => train._id);
+    // ✅ Get bookings for those trains on this date
+    const getAllBookings = await Booking.find({
+      trainId: { $in: trainIds },
+      journeyDate,
+    });
+
+    // ✅ Calculate journey length
     const journeyStationsList = getAllTrains
       .map((train) => {
         const route = train.route;
@@ -58,42 +78,47 @@ export const showTrains = async (req, res) => {
         );
         const toIndex = allStations.findIndex((st) => st.name === toStation);
 
-        // If both stations exist and from < to
         if (fromIndex !== -1 && toIndex !== -1 && fromIndex < toIndex) {
           const journeyStations = allStations.slice(fromIndex, toIndex + 1);
-          return {
-            journeyStations,
-          };
-        } else return null;
+          return { journeyStations };
+        }
+        return null;
       })
       .filter((t) => t !== null);
+
     const journeyLengths = journeyStationsList.map(
       (train) => train.journeyStations.length
     );
-    // console.log(journeyLengths[0]);
-    //---------------This part is to calculate how many stations are in the journey----------------
 
-    const trainsWithFares = await Promise.all(
+    // ✅ Attach fares and remaining seats
+    const trainsWithRemaining = await Promise.all(
       getAllTrains.map(async (train) => {
-        const fare = await Fare.findOne({ trainId: train._id }); // fetch fare
-        return { ...train.toObject(), fare };
+        const fare = await Fare.findOne({ trainId: train._id });
+
+        // Clone
+        const updatedTrain = { ...(train.toObject?.() || train) };
+        updatedTrain.fare = fare;
+        updatedTrain.remainingSeats = { ...train.seats };
+
+        // Apply bookings
+        getAllBookings.forEach((booking) => {
+          if (booking.trainId.toString() === train._id.toString()) {
+            const bookedClass = booking.seatClass;
+            const bookedCount = booking.seatNumber.length;
+
+            updatedTrain.remainingSeats[bookedClass] =
+              (updatedTrain.remainingSeats[bookedClass] || 0) - bookedCount;
+          }
+        });
+
+        return updatedTrain;
       })
     );
 
-    if (!trainsWithFares || trainsWithFares.length === 0)
-      return res.status(404).render("booking/showTrains", {
-        login: req.session.user,
-        trains: null,
-        trainFound: "No trains found for the selected route.",
-        fromStation: null,
-        toStation: null,
-        seatClass: null,
-        journeyDate: null,
-      });
-
+    // ✅ Render with correct trains data
     res.render("booking/showTrains", {
       login: req.session.user,
-      trains: trainsWithFares,
+      trains: trainsWithRemaining,
       trainFound: null,
       fromStation,
       toStation,
