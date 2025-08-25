@@ -28,6 +28,7 @@
             <p><strong>Confirmation Date:</strong> <%= new Date(bookingInfo.confirmationDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %></p>
             </div>
             <div class="col-md-6">
+            <p><strong>Train Name:</strong> <%= bookingInfo.trainId.trainName %> (<%= bookingInfo.trainId.trainNumber %>)</p>
             <p><strong>Journey Date:</strong> <%= new Date(bookingInfo.journeyDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %></p>
             <p><strong>From Station:</strong> <%= bookingInfo.fromStation %></p>
             <p><strong>Departure Time:</strong> <%= bookingInfo.departureTime %></p>
@@ -55,5 +56,9 @@
     </div>
     </div>
     <%- include('../partials/footer') %>
+    <script>
+        const bookingInfo = <%- JSON.stringify(bookingInfo) %>;
+        console.log(bookingInfo)
+    </script>
 </body>
 </html>
