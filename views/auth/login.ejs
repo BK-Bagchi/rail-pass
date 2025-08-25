@@ -24,6 +24,9 @@
                 <% if (userMissMatch || passwordMissMatch) { %>
                     <p class="text-danger mt-1"><%= userMissMatch || passwordMissMatch%></p>
                 <% }%>
+                <% if (successMessage) { %>
+                    <p class="text-success mt-1"><%= successMessage %></p>
+                <% } %>
             </div>
 
             <div class="d-grid">

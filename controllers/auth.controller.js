@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 
@@ -33,7 +32,8 @@ export const registerUser = async (req, res) => {
         login: req.session.user,
         userMissMatch: null,
         passwordMissMatch: null,
-        message: "User registered successfully. Please login to continue",
+        successMessage:
+          "User registered successfully. Please login to continue",
       });
   } catch (error) {
     res.status(500).json({ message: error.message || "Internal Server Error" });
@@ -45,6 +45,7 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user)
       return res.status(404).render("auth/login", {
+        login: req.session.user,
         userMissMatch: "User not found. Please register first.",
         passwordMissMatch: null,
       });
@@ -55,6 +56,7 @@ export const loginUser = async (req, res) => {
     );
     if (!isPasswordValid)
       return res.status(400).render("auth/login", {
+        login: req.session.user,
         userMissMatch: null,
         passwordMissMatch: "Invalid password",
       });

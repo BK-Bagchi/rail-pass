@@ -10,9 +10,10 @@ const authRouter = express.Router();
 // ✔ User Login
 authRouter.get("/login", (req, res) => {
   res.render("auth/login", {
-    login: null,
+    login: req.session.user,
     userMissMatch: null,
     passwordMissMatch: null,
+    successMessage: null,
   });
 });
 authRouter.post("/login", loginUser);
@@ -24,7 +25,7 @@ authRouter.get("/logout", logoutUser);
 // ✔ User Registration
 authRouter.get("/register", (req, res) => {
   res.render("auth/register", {
-    login: null,
+    login: req.session.user,
     userMissMatch: null,
     passwordMissMatch: null,
   });

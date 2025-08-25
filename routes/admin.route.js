@@ -14,8 +14,6 @@ import {
 } from "../controllers/station.controller.js";
 import User from "../models/user.model.js";
 import { getAllUser, updateUser } from "../controllers/user.controller.js";
-import Train from "../models/train.model.js";
-import Fare from "../models/fare.model.js";
 import {
   addNewFare,
   deleteFare,
